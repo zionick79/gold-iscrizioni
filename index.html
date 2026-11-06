@@ -137,7 +137,15 @@ function renderLogin(step = 1, email = "", note = "") {
         <label for="email">La tua email di socio
           <input id="email" type="email" required autocomplete="email" inputmode="email" value="${esc(email)}" placeholder="nome@esempio.ch"></label>
         <button class="btn" type="submit">Ricevi il codice</button>
-      </form>` : `
+      </form>
+      <!-- TEMPORANEO: accesso con password per i test, da togliere quando l'invio email (SMTP) è configurato -->
+      <details><summary>Accesso di prova con password</summary>
+        <form id="fpw" class="stack" style="padding-top:10px">
+          <label for="pwemail">Email<input id="pwemail" type="email" required autocomplete="username" value="${esc(email)}"></label>
+          <label for="pw">Password di prova<input id="pw" type="password" required autocomplete="current-password"></label>
+          <button class="btn ghost" type="submit">Entra con password</button>
+        </form>
+      </details>` : `
       <form id="f2" class="stack">
         <p class="small">Abbiamo inviato un codice a <b>${esc(email)}</b>. Controlla anche lo spam.</p>
         <label for="otp">Codice ricevuto
@@ -159,6 +167,13 @@ function renderLogin(step = 1, email = "", note = "") {
         if (e2) throw e2;
         renderLogin(2, em);
       } catch (x) { renderLogin(1, em, "!" + errText(x)); }
+    };
+    document.getElementById("fpw").onsubmit = async e => {
+      e.preventDefault();
+      e.submitter.disabled = true;
+      const em = document.getElementById("pwemail").value.trim().toLowerCase();
+      const { error } = await sb.auth.signInWithPassword({ email: em, password: document.getElementById("pw").value });
+      if (error) return renderLogin(1, em, "!Email o password di prova non corretti.");
     };
   } else {
     document.getElementById("otp").focus();
