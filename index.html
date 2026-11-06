@@ -3,421 +3,383 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>GOLD Iscrizioni</title>
+<title>GOLD · Gruppo Orientisti Lugano e Dintorni</title>
+<meta name="description" content="News, risultati e iscrizioni agli allenamenti del GOLD, Gruppo Orientisti Lugano e Dintorni.">
 <meta name="theme-color" content="#0f3a75">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* Layout: colonna unica centrata, pensata per il telefono; barra blu GOLD in alto */
 :root{
-  --bg:#f4f6fa; --surface:#fff; --ink:#111c2e; --muted:#5a6679; --line:#dde3ec;
-  --blue:#0f3a75; --blue-2:#1a56a8; --gold:#ffc20e; --gold-soft:#fff3c4;
-  --ok:#1d7a46; --ok-soft:#dcf3e5; --warn:#a35a00; --warn-soft:#ffecd1; --err:#b42318; --err-soft:#fde4e1;
-  --display:"Barlow Condensed",system-ui,sans-serif; --body:Inter,system-ui,sans-serif;
+  --bg:#f4f6fa; --surface:#ffffff; --ink:#111c2e; --muted:#5a6679; --line:#dde3ec;
+  --forest:#0f3a75; --forest-2:#1a56a8; --gold:#ffc20e; --gold-soft:#fff3c4;
+  --flag:#f26a1b; --blue:#1f5fa8; --red:#c8312b;
+  --shadow:0 1px 2px rgba(20,32,27,.06),0 8px 24px rgba(20,32,27,.07);
 }
-@media (prefers-color-scheme: dark){:root{
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1220; --surface:#141d2e; --ink:#edf1f7; --muted:#9aa6b8; --line:#243049;
+    --forest:#0b2550; --forest-2:#1c4f99; --gold-soft:#2e2810; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
   --bg:#0c1220; --surface:#141d2e; --ink:#edf1f7; --muted:#9aa6b8; --line:#243049;
-  --blue:#0b2550; --blue-2:#5b95e6; --gold-soft:#2e2810;
-  --ok:#6fd49a; --ok-soft:#12301f; --warn:#f2b866; --warn-soft:#33240c; --err:#ff8a7e; --err-soft:#3a1714; color-scheme:dark}}
+  --forest:#0b2550; --forest-2:#1c4f99; --gold-soft:#2e2810; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);color-scheme:dark;
+}
 *{box-sizing:border-box;margin:0}
-body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
-h1,h2,h3{font-family:var(--display);line-height:1.05;text-wrap:balance}
-.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
-header{background:var(--blue);color:#fff;padding-top:env(safe-area-inset-top);position:sticky;top:0;z-index:10}
-.hbar{display:flex;align-items:center;gap:12px;height:58px}
-.logo{display:flex;align-items:center;gap:10px}
-.logo svg{width:30px;height:30px}
-.logo b{font:800 26px/1 var(--display);color:var(--gold)}
-.logo small{font-size:12px;color:#d4e1f4}
-.who{margin-left:auto;font-size:13px;color:#d4e1f4;text-align:right;line-height:1.25}
-.who button{background:none;border:0;color:var(--gold);font:600 13px var(--body);cursor:pointer;padding:0}
-nav.tabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}
-nav.tabs button{flex:none;background:rgba(255,255,255,.08);color:#dbe6f6;border:0;border-radius:999px;padding:7px 14px;font:500 14px var(--body);cursor:pointer}
-nav.tabs button.on{background:var(--gold);color:#0f3a75}
-main{padding-block:20px 60px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
-.stack{display:grid;gap:14px}
-.muted{color:var(--muted)}
-.small{font-size:13px}
-label{display:grid;gap:5px;font-size:13px;font-weight:600}
-input,textarea,select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;width:100%}
-textarea{min-height:90px;resize:vertical}
-input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--blue-2);outline-offset:1px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media (max-width:520px){.row{grid-template-columns:1fr}}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:10px;padding:11px 16px;font:600 14px var(--body);cursor:pointer;background:var(--blue);color:#fff}
-.btn.gold{background:var(--gold);color:#0f3a75}
-.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
-.btn.danger{background:transparent;color:var(--err);border:1px solid var(--line)}
-.btn.sm{padding:7px 12px;font-size:13px}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.msg{padding:10px 12px;border-radius:10px;font-size:14px}
-.msg.err{background:var(--err-soft);color:var(--err)}
-.msg.ok{background:var(--ok-soft);color:var(--ok)}
-.pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
-.pill.open{background:var(--ok-soft);color:var(--ok)}
-.pill.closed{background:var(--line);color:var(--muted)}
-.pill.full{background:var(--warn-soft);color:var(--warn)}
-.ev{display:grid;gap:10px}
-.ev .top{display:flex;gap:14px;align-items:flex-start}
-.date{flex:none;width:56px;text-align:center;border-radius:12px;background:var(--blue);color:#fff;padding:7px 0}
-.date b{display:block;font:800 26px/1 var(--display)}
-.date small{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)}
-.ev h3{font-size:24px}
-.ev .meta{font-size:13px;color:var(--muted)}
-.people{display:grid;gap:8px;border-top:1px dashed var(--line);padding-top:10px}
-.person{display:flex;align-items:center;gap:10px;justify-content:space-between}
-.person span{font-weight:500;min-width:0}
-.person .yes{color:var(--ok);font-size:13px;font-weight:600;margin-right:6px}
-.list{display:grid;gap:0}
-.li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
-.li:last-child{border-bottom:0}
-.li .grow{flex:1;min-width:160px}
-.hero{padding-block:36px 10px}
-.hero h1{font-size:40px;margin-bottom:8px}
-.code{letter-spacing:.4em;font:600 24px/1 var(--body);text-align:center}
-.empty{text-align:center;padding:30px 10px;color:var(--muted)}
-details summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--blue-2)}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:50;max-width:calc(100% - 32px)}
-[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:25;background:var(--forest)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3,.cond{font-family:"Barlow Condensed",sans-serif;letter-spacing:.01em}
+
+/* ── Banner prototipo ── */
+.proto{background:var(--flag);color:#fff;font-size:13px;font-weight:600;text-align:center;padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* ── Header ── */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--forest) 94%,transparent);backdrop-filter:blur(8px);color:#fff}
+.hbar{display:flex;align-items:center;gap:16px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo .mark{width:38px;height:38px;flex:none}
+.logo b{font:800 30px/1 "Barlow Condensed";color:var(--gold);letter-spacing:.02em}
+.logo small{display:block;font-size:11px;color:#d4e1f4;line-height:1.2;max-width:150px}
+nav.main{margin-left:auto;display:flex;gap:4px}
+nav.main a{text-decoration:none;font-weight:500;font-size:14px;padding:8px 12px;border-radius:8px;color:#dbe6f6}
+nav.main a:hover{background:rgba(255,255,255,.08);color:#fff}
+nav.main a.on{background:var(--gold);color:var(--forest)}
+.login{border:1px solid rgba(255,255,255,.3);padding:7px 14px;border-radius:999px;text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap}
+.burger{display:none;margin-left:auto;background:none;border:0;color:#fff;padding:8px;cursor:pointer}
+.mnav{display:none;border-top:1px solid rgba(255,255,255,.1);padding:8px 0 14px}
+.mnav a{display:block;padding:10px 4px;text-decoration:none;color:#e3ecf8;font-weight:500;border-bottom:1px solid rgba(255,255,255,.06)}
+header.open .mnav{display:block}
+@media (max-width:900px){nav.main,.hbar .login{display:none}.burger{display:block}}
+
+/* ── Hero ── */
+.hero{position:relative;overflow:hidden;background:var(--forest);color:#fff;padding:48px 0 72px}
+.hero svg.topo{position:absolute;inset:0;width:100%;height:100%;opacity:.22}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.3fr 1fr;gap:32px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.hero h1{font-size:clamp(38px,6vw,64px);line-height:.98;margin:12px 0 14px;font-weight:800}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p.lead{color:#d4e1f4;max-width:520px;font-size:16px}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:12px;font-weight:600;text-decoration:none;font-size:14px;border:0;cursor:pointer}
+.btn.pri{background:var(--gold);color:var(--forest)}
+.btn.sec{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.next{background:var(--surface);color:var(--ink);border-radius:20px;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.25);position:relative}
+.next .tag{position:absolute;top:-12px;left:22px}
+.next h3{font-size:26px;line-height:1.1;margin:6px 0 8px}
+.next ul{list-style:none;padding:0;display:grid;gap:8px;margin:14px 0 18px;font-size:14px}
+.next li{display:flex;gap:10px;align-items:flex-start}
+.next li span.i{flex:none;width:28px;height:28px;border-radius:8px;background:var(--gold-soft);display:grid;place-items:center;font-size:14px}
+@media (max-width:860px){.hero .wrap{grid-template-columns:1fr}.hero{padding:32px 0 56px}}
+
+/* ── Stats ── */
+.stats{margin-top:-36px;position:relative;z-index:2}
+.stats .grid{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.stat{padding:18px 20px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat b{display:block;font:800 34px/1 "Barlow Condensed";color:var(--forest-2)}
+:root[data-theme="dark"] .stat b{color:var(--gold)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .stat b{color:var(--gold)}}
+.stat span{font-size:13px;color:var(--muted)}
+@media (max-width:700px){.stats .grid{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+
+/* ── Accesso rapido ── */
+section{padding:48px 0 0}
+.shead{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.shead h2{font-size:34px;line-height:1;font-weight:800}
+.shead p{color:var(--muted);font-size:14px}
+.quick{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.qk{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;text-decoration:none;transition:.2s;display:flex;flex-direction:column;gap:10px}
+.qk:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:transparent}
+.qk .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:var(--gold-soft)}
+.qk b{font-size:14px;font-weight:600;line-height:1.3}
+.qk small{color:var(--muted);font-size:12px;line-height:1.35}
+@media (max-width:1000px){.quick{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:560px){.quick{grid-template-columns:repeat(2,1fr)}}
+
+/* ── News ── */
+.layout{display:grid;grid-template-columns:1fr 300px;gap:28px;align-items:start}
+@media (max-width:980px){.layout{grid-template-columns:1fr}}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 14px;border-radius:999px;font:500 13px Inter;cursor:pointer}
+.chip.on{background:var(--forest);border-color:var(--forest);color:#fff}
+.search{flex:1;min-width:180px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:14px Inter}
+.tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px}
+.t-ris{background:#ffe7c2;color:#8a4a00}.t-all{background:#d7ecff;color:#0f4a86}.t-tra{background:#dff3e4;color:#1d6a39}.t-soc{background:#ece2ff;color:#5530a0}.t-mat{background:#f4e1df;color:#93261f}
+.feat{display:grid;grid-template-columns:1.1fr 1fr;background:var(--surface);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px}
+.ph{position:relative;min-height:220px;background:linear-gradient(135deg,var(--forest-2),var(--forest));overflow:hidden;display:flex;align-items:flex-end}
+.ph svg{position:absolute;inset:0;width:100%;height:100%;opacity:.35}
+.ph .cap{position:relative;margin:12px;font-size:11px;color:#fff;background:rgba(0,0,0,.35);padding:3px 8px;border-radius:6px}
+.feat .body{padding:24px}
+.feat h3{font-size:30px;line-height:1.05;margin:10px 0}
+.meta{font-size:12px;color:var(--muted);display:flex;gap:10px;align-items:center}
+@media (max-width:700px){.feat{grid-template-columns:1fr}.ph{min-height:180px}}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media (max-width:640px){.cards{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:.2s}
+.card:hover{box-shadow:var(--shadow);border-color:transparent}
+.card .ph{min-height:150px}
+.card .body{padding:18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card h3{font-size:22px;line-height:1.1}
+.card p{font-size:14px;color:var(--muted)}
+.card p.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.more{margin-top:auto;background:none;border:0;padding:0;color:var(--blue);font:600 13px Inter;cursor:pointer;text-align:left}
+:root[data-theme="dark"] .more{color:var(--gold)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .more{color:var(--gold)}}
+.medals{display:flex;gap:6px;flex-wrap:wrap}
+.medal{font-size:12px;font-weight:600;padding:3px 8px;border-radius:8px;background:var(--gold-soft)}
+.empty{display:none;padding:30px;text-align:center;color:var(--muted)}
+
+/* ── Sidebar ── */
+aside{display:grid;gap:16px;position:sticky;top:84px}
+@media (max-width:980px){aside{position:static}}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
+.box h4{font:700 18px "Barlow Condensed";letter-spacing:.04em;text-transform:uppercase;margin-bottom:12px}
+.cal{display:grid;gap:10px}
+.ev{display:flex;gap:12px;align-items:center}
+.ev .d{flex:none;width:48px;text-align:center;border-radius:12px;background:var(--forest);color:#fff;padding:6px 0}
+.ev .d b{display:block;font:800 22px/1 "Barlow Condensed"}
+.ev .d small{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)}
+.ev p{font-size:13px;line-height:1.35}.ev p span{color:var(--muted);font-size:12px}
+.links{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.links a{border:1px solid var(--line);border-radius:12px;padding:10px;text-decoration:none;font-size:13px;font-weight:600;display:flex;gap:8px;align-items:center}
+.links a:hover{background:var(--gold-soft)}
+.dot{width:10px;height:10px;border-radius:3px;flex:none}
+.shop li{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.shop{list-style:none;padding:0}
+.shop li:last-child{border:0}
+.shop b{white-space:nowrap}
+
+/* ── Footer ── */
+footer{margin-top:64px;background:var(--forest);color:#d4e1f4;padding:40px 0 28px;font-size:14px}
+footer .grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:24px}
+footer h5{font:700 16px "Barlow Condensed";color:#fff;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+footer a{display:block;text-decoration:none;padding:3px 0}
+footer a:hover{color:var(--gold)}
+.copy{border-top:1px solid rgba(255,255,255,.1);margin-top:28px;padding-top:16px;font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media (max-width:760px){footer .grid{grid-template-columns:1fr 1fr}}
+.theme{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);box-shadow:var(--shadow);cursor:pointer;font-size:18px}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute"><symbol id="flag" viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="36" rx="4" fill="#fff"/><path d="M38 2v32a4 4 0 0 1-4 4H2Z" fill="#f26a1b"/></symbol></svg>
 
-<header>
+
+<!-- simboli riutilizzati -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="flag" viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="36" rx="4" fill="#fff"/><path d="M38 2v32a4 4 0 0 1-4 4H2Z" fill="#f26a1b"/></symbol>
+    <pattern id="contour" width="400" height="300" patternUnits="userSpaceOnUse">
+      <g fill="none" stroke="#ffd24d" stroke-width="1.3">
+        <path d="M-20 60 C60 20 120 100 200 60 S340 20 420 70"/>
+        <path d="M-20 90 C60 50 120 130 200 90 S340 50 420 100"/>
+        <path d="M-20 120 C70 80 130 160 210 120 S350 80 420 130"/>
+        <path d="M-20 170 C50 140 140 210 220 170 S330 130 420 180"/>
+        <path d="M-20 210 C70 180 130 250 220 205 S340 170 420 220"/>
+        <path d="M-20 250 C60 220 150 290 230 245 S350 210 420 260"/>
+        <ellipse cx="300" cy="150" rx="40" ry="18"/>
+        <ellipse cx="300" cy="150" rx="22" ry="9"/>
+        <ellipse cx="80" cy="240" rx="30" ry="12"/>
+      </g>
+    </pattern>
+  </defs>
+</svg>
+
+<header id="hdr">
   <div class="wrap">
     <div class="hbar">
-      <div class="logo"><svg><use href="#flag"/></svg><div><b>GOLD</b> <small>Iscrizioni</small></div></div>
-      <div class="who" id="who" hidden></div>
+      <a class="logo" href="/">
+        <svg class="mark"><use href="#flag"/></svg>
+        <span><b>GOLD</b><small>Gruppo Orientisti Lugano e Dintorni</small></span>
+      </a>
+      <nav class="main">
+        <a class="on" href="#news">News</a><a href="/iscrizioni/">Iscrizioni</a><a href="https://www.gold-savosa.ch/">Sito storico</a><a href="#footer">Contatti</a>
+      </nav>
+      <a class="login" href="/iscrizioni/">Accedi soci</a>
+      <button class="burger" aria-label="Menu" onclick="document.getElementById('hdr').classList.toggle('open')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
     </div>
-    <nav class="tabs" id="tabs" hidden></nav>
+    <div class="mnav">
+      <a href="#news">News</a><a href="/iscrizioni/">Iscrizioni</a><a href="https://www.gold-savosa.ch/">Sito storico</a><a href="#footer">Contatti</a><a href="/iscrizioni/">Accedi soci</a>
+    </div>
   </div>
 </header>
 
-<main class="wrap" id="app"><p class="empty">Caricamento…</p></main>
-<div class="toast" id="toast" hidden></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>
-const SUPABASE_URL = "https://gwjhvfnfmlyiidqnuivs.supabase.co";
-const SUPABASE_KEY = "sb_publishable_5bXqfp3JD_soWMnz7zuwow__T_15mpC";
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const TZ = "Europe/Zurich";
-
-const $app = document.getElementById("app");
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const fmt = (d, o) => new Intl.DateTimeFormat("it-CH", {timeZone: TZ, ...o}).format(new Date(d));
-const fmtFull = d => fmt(d, {weekday:"long", day:"numeric", month:"long", hour:"2-digit", minute:"2-digit"});
-const deadline = ev => new Date(new Date(ev.starts_at).getTime() - ev.cutoff_hours * 3600e3);
-const isOpen = ev => ev.published && Date.now() < deadline(ev).getTime();
-function toast(t){const el=document.getElementById("toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2800)}
-function errText(e){
-  const m = e?.message || String(e);
-  if (/completo/i.test(m)) return "L'evento è al completo.";
-  if (/row-level security|violates/i.test(m)) return "Operazione non consentita: le iscrizioni per questo evento sono chiuse.";
-  if (/rate limit|security purposes/i.test(m)) return "Troppe richieste ravvicinate: attendi un minuto e riprova.";
-  if (/expired|invalid/i.test(m)) return "Codice errato o scaduto. Controlla l'ultima email ricevuta o richiedine uno nuovo.";
-  return m;
-}
-
-const S = { me: null, tab: "eventi" };
-
-// ─── Accesso con codice via email ───
-function renderLogin(step = 1, email = "", note = "") {
-  document.getElementById("who").hidden = true;
-  document.getElementById("tabs").hidden = true;
-  $app.innerHTML = `
-  <div class="hero"><h1>Iscrizioni agli eventi GOLD</h1>
-  <p class="muted">Allenamenti, gare e trasferte. Entri con la tua email: ricevi un codice, niente password.</p></div>
-  <div class="card stack">
-    ${note ? `<div class="msg ${note.startsWith("!") ? "err" : "ok"}">${esc(note.replace(/^!/, ""))}</div>` : ""}
-    ${step === 1 ? `
-      <form id="f1" class="stack">
-        <label for="email">La tua email di socio
-          <input id="email" type="email" required autocomplete="email" inputmode="email" value="${esc(email)}" placeholder="nome@esempio.ch"></label>
-        <button class="btn" type="submit">Ricevi il codice</button>
-      </form>
-      <!-- TEMPORANEO: accesso con password per i test, da togliere quando l'invio email (SMTP) è configurato -->
-      <details><summary>Accesso di prova con password</summary>
-        <form id="fpw" class="stack" style="padding-top:10px">
-          <label for="pwemail">Email<input id="pwemail" type="email" required autocomplete="username" value="${esc(email)}"></label>
-          <label for="pw">Password di prova<input id="pw" type="password" required autocomplete="current-password"></label>
-          <button class="btn ghost" type="submit">Entra con password</button>
-        </form>
-      </details>` : `
-      <form id="f2" class="stack">
-        <p class="small">Abbiamo inviato un codice a <b>${esc(email)}</b>. Controlla anche lo spam.</p>
-        <label for="otp">Codice ricevuto
-          <input id="otp" class="code" required inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="••••••"></label>
-        <button class="btn" type="submit">Entra</button>
-        <button class="btn ghost" type="button" id="back">Usa un'altra email</button>
-      </form>`}
-  </div>`;
-  if (step === 1) {
-    document.getElementById("f1").onsubmit = async e => {
-      e.preventDefault();
-      const btn = e.submitter; btn.disabled = true;
-      const em = document.getElementById("email").value.trim().toLowerCase();
-      try {
-        const { data: ok, error } = await sb.rpc("is_member_email", { p_email: em });
-        if (error) throw error;
-        if (!ok) return renderLogin(1, em, "!Questa email non è nell'elenco soci. Chiedi al responsabile del GOLD di aggiungerla.");
-        const { error: e2 } = await sb.auth.signInWithOtp({ email: em, options: { shouldCreateUser: true, emailRedirectTo: location.origin } });
-        if (e2) throw e2;
-        renderLogin(2, em);
-      } catch (x) { renderLogin(1, em, "!" + errText(x)); }
-    };
-    document.getElementById("fpw").onsubmit = async e => {
-      e.preventDefault();
-      e.submitter.disabled = true;
-      const em = document.getElementById("pwemail").value.trim().toLowerCase();
-      const { error } = await sb.auth.signInWithPassword({ email: em, password: document.getElementById("pw").value });
-      if (error) return renderLogin(1, em, "!Email o password di prova non corretti.");
-    };
-  } else {
-    document.getElementById("otp").focus();
-    document.getElementById("back").onclick = () => renderLogin(1, email);
-    document.getElementById("f2").onsubmit = async e => {
-      e.preventDefault();
-      const btn = e.submitter; btn.disabled = true;
-      const token = document.getElementById("otp").value.replace(/\D/g, "");
-      const { error } = await sb.auth.verifyOtp({ email, token, type: "email" });
-      if (error) return renderLogin(2, email, "!" + errText(error));
-      // onAuthStateChange (SIGNED_IN) avvia l'app
-    };
-  }
-}
-
-// ─── Avvio ───
-async function boot() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) return renderLogin();
-  const email = session.user.email.toLowerCase();
-  const { data: me, error } = await sb.from("members").select("*").eq("email", email).maybeSingle();
-  if (error || !me || !me.active) {
-    await sb.auth.signOut();
-    return renderLogin(1, email, "!Il tuo accesso non è attivo. Contatta il responsabile del GOLD.");
-  }
-  S.me = me;
-  const who = document.getElementById("who");
-  who.hidden = false;
-  who.innerHTML = `${esc(me.full_name)}<br><button id="logout">Esci</button>`;
-  document.getElementById("logout").onclick = async () => { await sb.auth.signOut(); S.me = null; renderLogin(); };
-  const tabs = [["eventi","Eventi"],["famiglia","La mia famiglia"]];
-  if (me.is_admin) tabs.push(["gestione","Gestione eventi"],["soci","Soci"]);
-  const nav = document.getElementById("tabs");
-  nav.hidden = false;
-  nav.innerHTML = tabs.map(([k,l]) => `<button data-t="${k}" class="${k===S.tab?"on":""}">${l}</button>`).join("");
-  nav.querySelectorAll("button").forEach(b => b.onclick = () => { S.tab = b.dataset.t; nav.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); show(); });
-  show();
-}
-function show(){ ({eventi:viewEvents, famiglia:viewFamily, gestione:viewAdminEvents, soci:viewMembers})[S.tab](); }
-
-// ─── Eventi (socio) ───
-async function viewEvents() {
-  $app.innerHTML = `<p class="empty">Caricamento eventi…</p>`;
-  const since = new Date(Date.now() - 6 * 3600e3).toISOString();
-  const [ev, pa, rg, ct] = await Promise.all([
-    sb.from("events").select("*").eq("published", true).gte("starts_at", since).order("starts_at"),
-    sb.from("participants").select("*").eq("member_id", S.me.id).order("created_at"),
-    sb.from("registrations").select("event_id,participant_id"),
-    sb.rpc("event_counts"),
-  ]);
-  const err = ev.error || pa.error || rg.error || ct.error;
-  if (err) { $app.innerHTML = `<div class="msg err">${esc(errText(err))}</div>`; return; }
-  const counts = Object.fromEntries((ct.data || []).map(r => [r.event_id, Number(r.n)]));
-  const mine = new Set(rg.data.map(r => r.event_id + "|" + r.participant_id));
-  if (!ev.data.length) { $app.innerHTML = `<div class="card empty">Nessun evento in programma per ora.<br>Torna a controllare più avanti.</div>`; return; }
-  $app.innerHTML = `<div class="stack">${ev.data.map(e => {
-    const open = isOpen(e), n = counts[e.id] || 0, full = e.capacity && n >= e.capacity;
-    const status = !open ? `<span class="pill closed">Iscrizioni chiuse</span>`
-      : full ? `<span class="pill full">Al completo</span>`
-      : `<span class="pill open">Aperte fino a ${esc(fmt(deadline(e), {weekday:"short", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"}))}</span>`;
-    return `<article class="card ev">
-      <div class="top">
-        <div class="date"><b>${fmt(e.starts_at,{day:"numeric"})}</b><small>${fmt(e.starts_at,{month:"short"})}</small></div>
-        <div style="min-width:0">
-          <h3>${esc(e.title)}</h3>
-          <div class="meta">${esc(fmtFull(e.starts_at))}${e.location ? " · " + esc(e.location) : ""}</div>
-          <div class="meta" style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">${status}<span>${n}${e.capacity ? " / " + e.capacity : ""} iscritti</span></div>
-        </div>
+<div class="hero">
+  <svg class="topo" preserveAspectRatio="none"><rect width="100%" height="100%" fill="url(#contour)"/></svg>
+  <div class="wrap">
+    <div>
+      <span class="eyebrow"><svg width="16" height="16"><use href="#flag"/></svg> News GOLD · stagione 2026</span>
+      <h1>Bussola in mano,<br><em>si parte.</em></h1>
+      <p class="lead">Risultati, allenamenti, trasferte e vita del club. Tutte le novità degli orientisti di Lugano e dintorni, in un colpo d'occhio.</p>
+      <div class="cta">
+        <a class="btn pri" href="/iscrizioni/">Iscriviti agli allenamenti →</a>
+        <a class="btn sec" href="#news">Leggi le news</a>
       </div>
-      ${e.description ? `<p class="small" style="white-space:pre-line">${esc(e.description)}</p>` : ""}
-      <div class="people">${pa.data.map(p => {
-        const on = mine.has(e.id + "|" + p.id);
-        return `<div class="person"><span>${esc(p.full_name)}</span><div>
-          ${on ? `<span class="yes">✓ Iscritto</span>` : ""}
-          <button class="btn sm ${on ? "ghost" : "gold"}" data-ev="${e.id}" data-p="${p.id}" data-on="${on?1:0}" ${!open || (!on && full) ? "disabled" : ""}>${on ? "Annulla" : "Iscrivi"}</button>
-        </div></div>`;}).join("")}
-      </div>
-    </article>`;}).join("")}</div>`;
-  $app.querySelectorAll("button[data-ev]").forEach(b => b.onclick = async () => {
-    b.disabled = true;
-    const { ev: event_id, p: participant_id } = b.dataset;
-    const q = b.dataset.on === "1"
-      ? sb.from("registrations").delete().eq("event_id", event_id).eq("participant_id", participant_id)
-      : sb.from("registrations").insert({ event_id, participant_id });
-    const { error } = await q;
-    if (error) { toast(errText(error)); b.disabled = false; return; }
-    toast(b.dataset.on === "1" ? "Iscrizione annullata" : "Iscrizione registrata");
-    viewEvents();
-  });
-}
-
-// ─── Famiglia ───
-async function viewFamily() {
-  const { data, error } = await sb.from("participants").select("*").eq("member_id", S.me.id).order("created_at");
-  if (error) { $app.innerHTML = `<div class="msg err">${esc(errText(error))}</div>`; return; }
-  $app.innerHTML = `<div class="stack">
-    <div class="card stack"><h2>La mia famiglia</h2>
-      <p class="small muted">Le persone che puoi iscrivere agli eventi con il tuo account, ad esempio i figli.</p>
-      <div class="list">${data.map(p => `<div class="li"><span class="grow">${esc(p.full_name)}${p.birth_year ? ` <span class="muted small">(${p.birth_year})</span>` : ""}</span>
-        <button class="btn sm ghost" data-ren="${p.id}">Rinomina</button>
-        ${data.length > 1 ? `<button class="btn sm danger" data-del="${p.id}">Rimuovi</button>` : ""}</div>`).join("")}</div>
     </div>
-    <form class="card stack" id="fadd"><h3>Aggiungi una persona</h3>
-      <div class="row"><label for="pname">Nome e cognome<input id="pname" required></label>
-      <label for="pyear">Anno di nascita (facoltativo)<input id="pyear" type="number" min="1900" max="2100" inputmode="numeric"></label></div>
-      <button class="btn" type="submit">Aggiungi</button></form></div>`;
-  document.getElementById("fadd").onsubmit = async e => {
-    e.preventDefault();
-    const y = document.getElementById("pyear").value;
-    const { error } = await sb.from("participants").insert({ member_id: S.me.id, full_name: document.getElementById("pname").value.trim(), birth_year: y ? Number(y) : null });
-    if (error) return toast(errText(error));
-    toast("Persona aggiunta"); viewFamily();
-  };
-  $app.querySelectorAll("[data-ren]").forEach(b => b.onclick = () => {
-    const li = b.closest(".li"), p = data.find(x => x.id === b.dataset.ren);
-    li.innerHTML = `<input class="grow" id="ren-${p.id}" value="${esc(p.full_name)}"><button class="btn sm">Salva</button>`;
-    li.querySelector("button").onclick = async () => {
-      const { error } = await sb.from("participants").update({ full_name: li.querySelector("input").value.trim() }).eq("id", p.id);
-      if (error) return toast(errText(error)); toast("Salvato"); viewFamily();
-    };
-  });
-  $app.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
-    if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Conferma rimozione"; return; }
-    const { error } = await sb.from("participants").delete().eq("id", b.dataset.del);
-    if (error) return toast(errText(error)); toast("Persona rimossa"); viewFamily();
-  });
-}
+    <div class="next">
+      <span class="tag t-all">Prossimi allenamenti</span>
+      <h3>Si torna in palestra mercoledì 11 novembre</h3>
+      <p style="font-size:14px;color:var(--muted)">Buone vacanze a tutti! Le iscrizioni si fanno come sempre sul sito GOLD, sezione «iscrizione allenamenti».</p>
+      <ul>
+        <li><span class="i">🧭</span><span>Porta <b>tutto il materiale necessario</b>: bussola, chip, orologio e pila da testa</span></li>
+        <li><span class="i">📅</span><span>Programma aggiornato il 23.10.2026</span></li>
+      </ul>
+      <a class="btn pri" style="width:100%;justify-content:center" href="/iscrizioni/">Iscrizione allenamenti</a>
+    </div>
+  </div>
+</div>
 
-// ─── Gestione eventi (admin) ───
-const toLocalInput = d => { const x = new Date(d); const p = n => String(n).padStart(2,"0");
-  return `${x.getFullYear()}-${p(x.getMonth()+1)}-${p(x.getDate())}T${p(x.getHours())}:${p(x.getMinutes())}`; };
-async function viewAdminEvents(editId = null) {
-  const [ev, ct] = await Promise.all([
-    sb.from("events").select("*").order("starts_at", { ascending: false }).limit(100),
-    sb.rpc("event_counts"),
-  ]);
-  if (ev.error) { $app.innerHTML = `<div class="msg err">${esc(errText(ev.error))}</div>`; return; }
-  const counts = Object.fromEntries((ct.data || []).map(r => [r.event_id, Number(r.n)]));
-  const cur = ev.data.find(x => x.id === editId) || {};
-  $app.innerHTML = `<div class="stack">
-    <form class="card stack" id="fev"><h2>${editId ? "Modifica evento" : "Nuovo evento"}</h2>
-      <label for="etitle">Titolo<input id="etitle" required value="${esc(cur.title)}" placeholder="Allenamento in palestra"></label>
-      <div class="row">
-        <label for="estart">Data e ora<input id="estart" type="datetime-local" required value="${cur.starts_at ? toLocalInput(cur.starts_at) : ""}"></label>
-        <label for="eloc">Luogo<input id="eloc" value="${esc(cur.location)}" placeholder="Palestra Liceo Savosa"></label>
-      </div>
-      <div class="row">
-        <label for="ecut">Iscrizioni chiuse quante ore prima<input id="ecut" type="number" min="0" required value="${cur.cutoff_hours ?? 24}" inputmode="numeric"></label>
-        <label for="ecap">Posti massimi (vuoto = illimitati)<input id="ecap" type="number" min="1" value="${cur.capacity ?? ""}" inputmode="numeric"></label>
-      </div>
-      <label for="edesc">Descrizione<textarea id="edesc" placeholder="Materiale: bussola, chip, pila frontale…">${esc(cur.description)}</textarea></label>
-      <label style="display:flex;gap:8px;align-items:center;font-weight:500" for="epub"><input id="epub" type="checkbox" style="width:auto" ${cur.published === false ? "" : "checked"}> Visibile ai soci</label>
-      <p class="small muted" id="cutinfo"></p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="submit">${editId ? "Salva modifiche" : "Crea evento"}</button>
-      ${editId ? `<button class="btn ghost" type="button" id="cancel">Annulla</button>` : ""}</div>
-    </form>
-    <div class="card"><h2 style="margin-bottom:6px">Eventi</h2>
-      <div class="list">${ev.data.length ? ev.data.map(e => `<div class="li" style="display:block">
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-          <div class="grow"><b>${esc(e.title)}</b>${e.published ? "" : ` <span class="pill closed">nascosto</span>`}<br>
-            <span class="small muted">${esc(fmtFull(e.starts_at))} · chiusura ${e.cutoff_hours} h prima · ${counts[e.id]||0}${e.capacity?"/"+e.capacity:""} iscritti</span></div>
-          <button class="btn sm ghost" data-edit="${e.id}">Modifica</button>
-          <button class="btn sm danger" data-del="${e.id}">Elimina</button>
+<div class="stats">
+  <div class="wrap">
+    <div class="grid">
+      <div class="stat"><b>16</b><span>titoli ticinesi nel 2026</span></div>
+      <div class="stat"><b>152</b><span>punti TMS ai CT sprint</span></div>
+      <div class="stat"><b>2°</b><span>staffetta Sele, Novaggio</span></div>
+      <div class="stat"><b>~30</b><span>goldini al Cansiglio</span></div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="shead"><h2>Accesso rapido</h2><p>Le pagine più usate, a un tocco.</p></div>
+    <div class="quick">
+      <a class="qk" href="/iscrizioni/"><span class="ic">✍️</span><b>Iscrizione allenamenti</b><small>Accedi e prenota il posto</small></a>
+      <a class="qk" href="https://www.gold-savosa.ch/"><span class="ic">📅</span><b>Calendario</b><small>Gare e appuntamenti</small></a>
+      <a class="qk" href="https://www.gold-savosa.ch/"><span class="ic">🏆</span><b>Classifiche</b><small>Risultati e TMS</small></a>
+      <a class="qk" href="https://www.gold-savosa.ch/"><span class="ic">🗺️</span><b>Cartine</b><small>Archivio mappe</small></a>
+      <a class="qk" href="https://www.gold-savosa.ch/"><span class="ic">🌱</span><b>C.O. per tutti</b><small>Corso principianti</small></a>
+      <a class="qk" href="https://www.gold-savosa.ch/"><span class="ic">🚐</span><b>Noleggio furgoni</b><small>Trasferte del club</small></a>
+    </div>
+  </div>
+</section>
+
+<section id="news">
+  <div class="wrap">
+    <div class="shead"><h2>Ultime notizie</h2><p>16 articoli · aggiornato il 23.10.2026</p></div>
+    <div class="layout">
+      <div>
+        <div class="filters">
+          <button class="chip on" data-f="all">Tutte</button>
+          <button class="chip" data-f="ris">Risultati</button>
+          <button class="chip" data-f="all2">Allenamenti</button>
+          <button class="chip" data-f="tra">Trasferte</button>
+          <button class="chip" data-f="soc">Società</button>
+          <input class="search" id="q" type="search" placeholder="Cerca: Piora, Liam, staffetta…">
         </div>
-        <details data-reg="${e.id}"><summary>Vedi iscritti</summary><div class="small" style="padding-top:8px">…</div></details>
-      </div>`).join("") : `<p class="empty">Ancora nessun evento.</p>`}</div></div></div>`;
-  const upd = () => { const v = document.getElementById("estart").value, h = Number(document.getElementById("ecut").value || 0);
-    document.getElementById("cutinfo").textContent = v ? "Le iscrizioni chiuderanno " + fmtFull(new Date(new Date(v).getTime() - h*3600e3)) + "." : ""; };
-  ["estart","ecut"].forEach(id => document.getElementById(id).oninput = upd); upd();
-  if (editId) document.getElementById("cancel").onclick = () => viewAdminEvents();
-  document.getElementById("fev").onsubmit = async e => {
-    e.preventDefault();
-    const cap = document.getElementById("ecap").value;
-    const row = { title: document.getElementById("etitle").value.trim(), location: document.getElementById("eloc").value.trim() || null,
-      starts_at: new Date(document.getElementById("estart").value).toISOString(), cutoff_hours: Number(document.getElementById("ecut").value),
-      capacity: cap ? Number(cap) : null, description: document.getElementById("edesc").value.trim() || null, published: document.getElementById("epub").checked };
-    const { error } = editId ? await sb.from("events").update(row).eq("id", editId) : await sb.from("events").insert(row);
-    if (error) return toast(errText(error));
-    toast(editId ? "Evento aggiornato" : "Evento creato"); viewAdminEvents();
-  };
-  $app.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => { viewAdminEvents(b.dataset.edit); scrollTo(0,0); });
-  $app.querySelectorAll("button[data-del]").forEach(b => b.onclick = async () => {
-    if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Conferma eliminazione"; return; }
-    const { error } = await sb.from("events").delete().eq("id", b.dataset.del);
-    if (error) return toast(errText(error)); toast("Evento eliminato"); viewAdminEvents();
-  });
-  $app.querySelectorAll("details[data-reg]").forEach(d => d.ontoggle = async () => {
-    if (!d.open) return;
-    const box = d.querySelector("div");
-    const { data, error } = await sb.from("registrations").select("created_at, participants(full_name, members(full_name,email))").eq("event_id", d.dataset.reg).order("created_at");
-    if (error) { box.textContent = errText(error); return; }
-    if (!data.length) { box.textContent = "Nessun iscritto."; return; }
-    const lines = data.map((r,i) => `${i+1}. ${r.participants.full_name}` + (r.participants.members.full_name !== r.participants.full_name ? ` (socio: ${r.participants.members.full_name})` : ""));
-    box.innerHTML = `<ol style="padding-left:20px">${data.map(r => `<li>${esc(r.participants.full_name)} <span class="muted">· ${esc(r.participants.members.email)}</span></li>`).join("")}</ol>
-      <button class="btn sm ghost" style="margin-top:8px">Copia elenco</button>`;
-    box.querySelector("button").onclick = async () => { try { await navigator.clipboard.writeText(lines.join("\n")); toast("Elenco copiato"); } catch { toast("Copia non riuscita"); } };
-  });
-}
 
-// ─── Soci (admin) ───
-async function viewMembers() {
-  const { data, error } = await sb.from("members").select("*").order("full_name");
-  if (error) { $app.innerHTML = `<div class="msg err">${esc(errText(error))}</div>`; return; }
-  $app.innerHTML = `<div class="stack">
-    <form class="card stack" id="fm"><h2>Aggiungi soci</h2>
-      <p class="small muted">Una riga per socio: <b>Nome Cognome; email</b>. Puoi incollare un elenco intero da Excel.</p>
-      <label for="mlist">Elenco<textarea id="mlist" placeholder="Anna Rossi; anna.rossi@esempio.ch&#10;Marco Bianchi; marco@esempio.ch"></textarea></label>
-      <button class="btn" type="submit">Aggiungi</button></form>
-    <div class="card"><h2 style="margin-bottom:6px">Soci (${data.length})</h2>
-      <input id="mfind" placeholder="Cerca per nome o email" style="margin-bottom:6px">
-      <div class="list" id="mlistbox">${data.map(m => `<div class="li" data-s="${esc((m.full_name+" "+m.email).toLowerCase())}">
-        <div class="grow"><b>${esc(m.full_name)}</b>${m.is_admin ? ` <span class="pill open">admin</span>` : ""}${m.active ? "" : ` <span class="pill closed">disattivato</span>`}<br><span class="small muted">${esc(m.email)}</span></div>
-        ${m.id === S.me.id ? `<span class="small muted">sei tu</span>` : `
-        <button class="btn sm ghost" data-act="${m.id}" data-v="${m.active?0:1}">${m.active ? "Disattiva" : "Riattiva"}</button>
-        <button class="btn sm ghost" data-adm="${m.id}" data-v="${m.is_admin?0:1}">${m.is_admin ? "Togli admin" : "Rendi admin"}</button>`}
-      </div>`).join("")}</div></div></div>`;
-  document.getElementById("mfind").oninput = e => { const q = e.target.value.toLowerCase();
-    $app.querySelectorAll("#mlistbox .li").forEach(li => li.hidden = q && !li.dataset.s.includes(q)); };
-  document.getElementById("fm").onsubmit = async e => {
-    e.preventDefault();
-    const rows = [], bad = [];
-    document.getElementById("mlist").value.split(/\n/).map(l => l.trim()).filter(Boolean).forEach(l => {
-      const parts = l.split(/[;\t,]/).map(x => x.trim()).filter(Boolean);
-      const email = parts.find(x => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x));
-      const name = parts.filter(x => x !== email).join(" ");
-      if (email && name) rows.push({ email: email.toLowerCase(), full_name: name }); else bad.push(l);
-    });
-    if (!rows.length) return toast("Nessuna riga valida: usa «Nome Cognome; email».");
-    const { error } = await sb.from("members").upsert(rows, { onConflict: "email", ignoreDuplicates: true });
-    if (error) return toast(errText(error));
-    toast(`${rows.length} soci elaborati` + (bad.length ? `, ${bad.length} righe ignorate` : "")); viewMembers();
-  };
-  $app.querySelectorAll("[data-act]").forEach(b => b.onclick = async () => {
-    const { error } = await sb.from("members").update({ active: b.dataset.v === "1" }).eq("id", b.dataset.act);
-    if (error) return toast(errText(error)); viewMembers();
-  });
-  $app.querySelectorAll("[data-adm]").forEach(b => b.onclick = async () => {
-    const { error } = await sb.from("members").update({ is_admin: b.dataset.v === "1" }).eq("id", b.dataset.adm);
-    if (error) return toast(errText(error)); viewMembers();
-  });
-}
+        <article class="feat" data-cat="ris">
+          <div class="ph"><svg preserveAspectRatio="none"><rect width="100%" height="100%" fill="url(#contour)"/></svg><span class="cap">Foto: Piora-Cadagno</span></div>
+          <div class="body">
+            <span class="tag t-ris">Risultati</span>
+            <h3>Gare a Piora-Cadagno: 4 titoli di campione ticinese Middle</h3>
+            <div class="meta">01.10.2026 · Middle + staffetta</div>
+            <p style="margin:12px 0;color:var(--muted);font-size:14px">Un weekend magnifico, baciato dal sole e con paesaggi davvero spettacolari, ha fatto da cornice alle gare in Piora. Complimenti a tutti per le ottime prestazioni del weekend in uno stupendo terreno di gara alpino!</p>
+            <div class="medals"><span class="medal">🥇 Sofia D10</span><span class="medal">🥇 Chiara D12</span><span class="medal">🥇 Liam H12</span><span class="medal">🥇 Manu H40</span></div>
+            <p style="margin-top:12px;font-size:13px">Tripletta per <b>Chiara</b> e <b>Liam</b>: 3 titoli di Campione Ticinese quest'anno.</p>
+          </div>
+        </article>
 
-sb.auth.onAuthStateChange((ev) => { if (ev === "SIGNED_IN" && !S.me) setTimeout(boot, 0); });
-boot();
+        <div class="cards" id="cards"></div>
+        <div class="empty" id="empty">Nessuna notizia trovata.</div>
+      </div>
+
+      <aside>
+        <div class="box" style="background:var(--forest);color:#fff;border-color:transparent">
+          <h4 style="color:var(--gold)">Iscrizioni online</h4>
+          <p style="font-size:14px;color:#d4e1f4">Allenamenti, gare e trasferte: i soci si iscrivono e si disiscrivono da soli, anche per i figli. Si entra con l'email, senza password.</p>
+          <a class="btn pri" style="margin-top:14px;width:100%;justify-content:center" href="/iscrizioni/">Vai alle iscrizioni</a>
+        </div>
+        <div class="box">
+          <h4>Materiale GOLD</h4>
+          <ul class="shop">
+            <li><span>Bussola a dito</span><b>CHF 20.–</b></li>
+            <li><span>SIAC</span><b>CHF 35.–</b></li>
+            <li><span>Pila da testa (1 pezzo)</span><b>CHF 20.–</b></li>
+            <li><span>Portadescrizioni</span><b>CHF 5.–</b></li>
+          </ul>
+        </div>
+        <div class="box">
+          <h4>Link importanti</h4>
+          <div class="links">
+            <a href="/iscrizioni/"><span class="dot" style="background:var(--gold)"></span>Iscrizioni</a>
+            <a href="https://www.gold-savosa.ch/"><span class="dot" style="background:#1f5fa8"></span>Sito storico</a>
+            <a href="https://www.swiss-orienteering.ch/"><span class="dot" style="background:#c8312b"></span>Swiss Orienteering</a>
+          </div>
+        </div>
+        <div class="box" style="background:var(--gold-soft);border-color:transparent">
+          <h4>Con il supporto di</h4>
+          <p style="font-size:13px">«Grazie per non fumare»: spazio dedicato a sponsor e partner del club.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<footer id="footer">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <a class="logo" href="/" style="display:flex;padding:0"><svg class="mark"><use href="#flag"/></svg><span><b>GOLD</b><small>Gruppo Orientisti Lugano e Dintorni</small></span></a>
+        <p style="margin-top:12px;max-width:300px">Corsa d'orientamento per tutte le età, dai giovanissimi ai veterani, nel Luganese.</p>
+      </div>
+      <div><h5>Club</h5><a href="https://www.gold-savosa.ch/">Società</a><a href="/iscrizioni/">Iscrizioni allenamenti</a><a href="https://www.gold-savosa.ch/">Corso principianti</a><a href="https://www.gold-savosa.ch/">Forum</a></div>
+      <div><h5>Gare</h5><a href="https://www.gold-savosa.ch/">Calendario</a><a href="https://www.gold-savosa.ch/">Classifiche</a><a href="https://www.gold-savosa.ch/">Cartine</a><a href="https://www.gold-savosa.ch/">Gara MTB-O</a></div>
+      <div><h5>Seguici</h5><a href="https://www.gold-savosa.ch/">Sito storico</a><a href="https://www.swiss-orienteering.ch/">Swiss Orienteering</a><a href="#footer">Contatti</a><a href="/iscrizioni/">Accedi soci</a></div>
+    </div>
+    <div class="copy"><span>© GOLD Savosa</span><span>Soci: <a href="/iscrizioni/" style="display:inline">iscrizioni online</a></span></div>
+  </div>
+</footer>
+
+<button class="theme" id="theme" aria-label="Cambia tema">◐</button>
+
+<script>
+// Link di accesso ricevuto via email che atterra sulla home: passalo alla pagina iscrizioni
+if (/access_token|error_description/.test(location.hash)) location.replace("/iscrizioni/" + location.hash);
+const news=[
+ {c:"tra",d:"23.10.2026",t:"Prossimi allenamenti GOLD",x:"Ecco i prossimi allenamenti in programma. Iscrizioni come sempre sul sito GOLD, sezione «iscrizione allenamenti». È importante che ognuno porti all'allenamento tutto il materiale necessario (bussola, chip, orologio e pila da testa). Buone vacanze a tutti, ci rivediamo mercoledì 11 novembre in palestra!",k:"all2"},
+ {c:"ris",d:"15.09.2026",t:"Altre medaglie per i goldini ai MOM e SOM",x:"Nel secondo weekend nazionale nei tecnici boschi del Giura, i goldini hanno ottenuto una medaglia d'argento negli H40 ai campionati svizzeri sulla media distanza (MOM) per merito del Gio, mentre domenica nei CS di staffette (SOM) bronzo per Ale in una staffetta mista D14 ASCO/GOLD e oro negli H210 per il Checco in una staffetta mista CO Aget/GOLD. Complimenti ai nostri bravi atleti!",m:["🥈 Gio H40","🥉 Ale D14","🥇 Checco H210"]},
+ {c:"ris",d:"07.09.2026",t:"Due medaglie ai Campionati Svizzeri Lunga distanza!",x:"Il GOLD ha portato a casa due medaglie ai recenti Campionati Svizzeri sulla Lunga distanza, per opera del Gio (3. H40) e del Neno (3. H60)! Piazzamenti di ottimo livello anche per Ale (5. D14), Manu (7. H40), Liam (8. H12) e Chiara (8. D12). Complimenti a tutti!",m:["🥉 Gio H40","🥉 Neno H60"],p:1},
+ {c:"tra",d:"02.09.2026",t:"Gare a Piora-Cadagno: info su trasporto e spostamenti",x:"Ci sono importanti informazioni da sapere sul trasporto e sugli spostamenti. Vi invitiamo a leggere attentamente queste informazioni preliminari. Le iscrizioni scadono domenica 20 settembre! Iscrizioni su OL-Events, per il trasporto con i furgoni annunciarsi sul sito."},
+ {c:"all2",d:"27.08.2026",t:"Corso principianti GOLD",x:"Anche quest'anno organizziamo un corso principianti, in 3 lezioni, con inizio mercoledì 9 settembre (ritrovo alle 17:00 al Liceo di Savosa). Qui potete trovare maggiori informazioni. Grazie per propagandarlo a vostri amici e conoscenti!",p:1},
+ {c:"ris",d:"27.08.2026",t:"Camp. ticinesi long a Robiei: 6 titoli al GOLD!",x:"In una giornata stupenda, si sono svolti in questa remota, bellissima, impegnativa zona i CT long, ben organizzati dal GOV. I nostri atleti hanno fatto la parte del leone, conquistando ben 6 titoli, con Chiara (D12), Liam (H12), Ale (D14), Elena (D40), Gio (H40) e Checco (H60). Complimenti a tutti!",m:["🥇×6"]},
+ {c:"tra",d:"23.06.2026",t:"Bella trasferta al Cansiglio!",x:"Una trentina di Goldini hanno preso parte a questa trasferta in una delle regioni orientistiche più belle d'Europa. Belle le gare ma soprattutto un ottimo ambiente, che ha lasciato di sicuro fra i partecipanti (fra cui un buon numero di giovani) un ottimo ricordo. Grandiosi anche i risultati, con diversi nostri atleti sul podio: nelle categorie dei dodicenni 5 dei 6 sul podio erano Goldini!"},
+ {c:"ris",d:"25.05.2026",t:"Secondo posto per la squadra GOLD alla staffetta Sele!",x:"Dopo alcuni anni in ombra, a Novaggio la prima squadra GOLD ha ottenuto un brillantissimo 2. posto, dietro la miglior squadra ASCO. Bene anche le altre due squadre «da classifica» del GOLD, con l'8. posto (Manu, Ale, Elena, Teo) e il 10. posto (Gio, Chiara, Matthi, Alberto). Complimenti a tutti i partecipanti!"},
+ {c:"ris",d:"24.05.2026",t:"Grande successo del TMO GOLD ad Astano!",x:"In una giornata splendida, in un posto incantevole, con dei percorsi super-intriganti, e dei validissimi collaboratori il successo era quasi scontato… Bravi anche i nostri atleti, soprattutto i piccoli che hanno brillato dopo i proficui allenamenti al campo di Olivone!"},
+ {c:"ris",d:"11.05.2026",t:"Quattro medaglie agli SPM per il GOLD!",x:"In quel di Losanna, su dei percorsi tecnici ed interessanti i nostri atleti hanno conquistato 4 medaglie. Gio primo negli H40, Neno secondo negli H60, Liam e Checco terzi rispettivamente in H12 e H70. Solo per poco Chiara ha mancato la medaglia nelle D12, finendo ai piedi del podio…",m:["🥇 Gio H40","🥈 Neno H60","🥉 Liam H12","🥉 Checco H70"],p:1},
+ {c:"ris",d:"28.04.2026",t:"Grandi risultati alle gare nazionali in Ticino!",x:"Sabato nel bosco di Arcegno, in una gara tecnica che ha messo in difficoltà diversi atleti, ben 9 atleti del GOLD nella «top 10»: 1. Liam (H12), 2. Manu (H40), 2. Federica (D35), 4. Sofia (D10), 4. Ale (D14), 6. John (H18), 9. Vittorio (H10), 9. Chiara (D12), 10. Nerio (H12). Nella sprint della domenica ad Ascona di nuovo eccellenti risultati: 1. Manu (H40), 2. Liam (H12), 6. Julie (D10), 10. Chiara (D12)."},
+ {c:"ris",d:"19.04.2026",t:"Bravi i goldini nel weekend di nazionali a SG",x:"Nella gara long di sabato, in un bosco impegnativo tutto in costa, i nostri atleti hanno colto degli ottimi risultati: Liam (2. H12 per soli 13 secondi), Alessia (4. D14), Manuel (2. H40), Gio (5. H40), Neno (3. H60), Checco (2. H70). Nella sprint del giorno dopo, di nuovo diversi goldini nei top 5."},
+ {c:"ris",d:"22.03.2026",t:"6 titoli di CT al GOLD!",x:"Ai campionati ticinesi sprint di Chiasso il GOLD ha conquistato ben 6 titoli, di cui tre nelle categorie dei giovanissimi: D10 Julie, D12 Chiara, H12 Liam (con un podio tutto GOLD con Julian e Nerio). Fra i più «sperimentati» hanno poi vinto John (H18), Gio (H40) e Teo (H50). Oltre a queste vittorie i goldini hanno ottenuto tanti altri bei risultati, che hanno portato a ben 152 punti nel TMS.",m:["🥇×6","152 pt TMS"],p:1},
+ {c:"soc",d:"04.03.2026",t:"Nuovo presidente del GOLD",x:"Nel corso della recente assemblea annuale, Sandro Corsi, presidente da 20 anni, ha lasciato l'incarico. Al suo posto è stata eletta per acclamazione Elena Guglielmetti Asmus, a cui vanno gli auguri da parte di tutti i goldini. Nel link trovate le slide di ringraziamento preparate dalla Elena per Sandro.",p:1},
+ {c:"soc",d:"06.11.2025",t:"Materiale GOLD disponibile",x:"Da subito è a disposizione il seguente materiale: bussole a dito (20.– franchi), SIAC (35.– franchi), pile da testa (1 solo pezzo rimanente, 20.– franchi), portadescrizioni (5.– franchi)."}
+];
+const lab={ris:["Risultati","t-ris"],tra:["Trasferte","t-tra"],all2:["Allenamenti","t-all"],soc:["Società","t-soc"]};
+const $c=document.getElementById('cards');
+news.forEach(n=>{
+  const cat=n.k||n.c, [l,cls]=lab[cat];
+  const a=document.createElement('article');a.className='card';a.dataset.cat=cat;a.dataset.txt=(n.t+' '+n.x).toLowerCase();
+  a.innerHTML=(n.p?`<div class="ph"><svg preserveAspectRatio="none"><rect width="100%" height="100%" fill="url(#contour)"/></svg><span class="cap">Foto</span></div>`:'')+
+  `<div class="body"><div class="meta"><span class="tag ${cls}">${l}</span>${n.d}</div><h3>${n.t}</h3>`+
+  (n.m?`<div class="medals">${n.m.map(x=>`<span class="medal">${x}</span>`).join('')}</div>`:'')+
+  `<p class="clamp">${n.x}</p><button class="more">Leggi tutto ↓</button></div>`;
+  a.querySelector('.more').onclick=e=>{const p=a.querySelector('p');const o=p.classList.toggle('clamp');e.target.textContent=o?'Leggi tutto ↓':'Chiudi ↑'};
+  $c.appendChild(a);
+});
+let f='all';
+function apply(){
+  const q=document.getElementById('q').value.trim().toLowerCase();let n=0;
+  document.querySelectorAll('#cards .card').forEach(c=>{const ok=(f==='all'||c.dataset.cat===f)&&(!q||c.dataset.txt.includes(q));c.style.display=ok?'':'none';n+=ok});
+  const ft=document.querySelector('.feat');ft.style.display=(f==='all'||f==='ris')&&!q?'':'none';
+  document.getElementById('empty').style.display=n?'none':'block';
+}
+document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));b.classList.add('on');f=b.dataset.f;apply()});
+document.getElementById('q').oninput=apply;
+document.getElementById('theme').onclick=()=>{const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark'};
 </script>
 </body>
 </html>

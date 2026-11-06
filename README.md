@@ -11,7 +11,8 @@ Sito per le iscrizioni dei soci GOLD (Gruppo Orientisti Lugano e Dintorni) ad al
 
 | File | Contenuto |
 |---|---|
-| `index.html` | L'intero sito: HTML, CSS e JavaScript, con supabase-js da CDN |
+| `index.html` | Homepage pubblica: news, risultati, accesso rapido |
+| `iscrizioni/index.html` | Area soci: accesso con codice email e iscrizioni (supabase-js da CDN) |
 | `supabase/schema.sql` | Tabelle, funzioni e regole di sicurezza (RLS) del database |
 
 Il sito è statico: non ha build e non ha server. Tutte le regole (chiusura iscrizioni, posti, permessi) sono applicate dal database con le policy RLS, quindi non si aggirano modificando la pagina. La chiave in `index.html` è la chiave *publishable* di Supabase, pensata per stare nel browser.
@@ -26,4 +27,4 @@ Il sito è statico: non ha build e non ha server. Tutte le regole (chiusura iscr
    <p>Se non l'hai richiesto tu, ignora questa email.</p>
    ```
 3. **Supabase → Authentication → SMTP Settings:** configurare un servizio di invio email, ad esempio Brevo (gratuito fino a 300 email al giorno). Senza SMTP proprio, Supabase invia solo pochissime email e solo agli indirizzi del team.
-4. **Supabase → Authentication → URL Configuration:** come *Site URL* mettere l'indirizzo del sito su Vercel.
+4. **Supabase → Authentication → URL Configuration:** come *Site URL* mettere l'indirizzo del sito su Vercel e aggiungere `https://<indirizzo>/iscrizioni/` tra le *Redirect URLs*.

@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GOLD Iscrizioni</title>
+<meta name="theme-color" content="#0f3a75">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: colonna unica centrata, pensata per il telefono; barra blu GOLD in alto */
+:root{
+  --bg:#f4f6fa; --surface:#fff; --ink:#111c2e; --muted:#5a6679; --line:#dde3ec;
+  --blue:#0f3a75; --blue-2:#1a56a8; --gold:#ffc20e; --gold-soft:#fff3c4;
+  --ok:#1d7a46; --ok-soft:#dcf3e5; --warn:#a35a00; --warn-soft:#ffecd1; --err:#b42318; --err-soft:#fde4e1;
+  --display:"Barlow Condensed",system-ui,sans-serif; --body:Inter,system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0c1220; --surface:#141d2e; --ink:#edf1f7; --muted:#9aa6b8; --line:#243049;
+  --blue:#0b2550; --blue-2:#5b95e6; --gold-soft:#2e2810;
+  --ok:#6fd49a; --ok-soft:#12301f; --warn:#f2b866; --warn-soft:#33240c; --err:#ff8a7e; --err-soft:#3a1714; color-scheme:dark}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,h3{font-family:var(--display);line-height:1.05;text-wrap:balance}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+header{background:var(--blue);color:#fff;padding-top:env(safe-area-inset-top);position:sticky;top:0;z-index:10}
+.hbar{display:flex;align-items:center;gap:12px;height:58px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo svg{width:30px;height:30px}
+.logo b{font:800 26px/1 var(--display);color:var(--gold)}
+.logo small{font-size:12px;color:#d4e1f4}
+.who{margin-left:auto;font-size:13px;color:#d4e1f4;text-align:right;line-height:1.25}
+.who button{background:none;border:0;color:var(--gold);font:600 13px var(--body);cursor:pointer;padding:0}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}
+nav.tabs button{flex:none;background:rgba(255,255,255,.08);color:#dbe6f6;border:0;border-radius:999px;padding:7px 14px;font:500 14px var(--body);cursor:pointer}
+nav.tabs button.on{background:var(--gold);color:#0f3a75}
+main{padding-block:20px 60px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+.stack{display:grid;gap:14px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+label{display:grid;gap:5px;font-size:13px;font-weight:600}
+input,textarea,select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;width:100%}
+textarea{min-height:90px;resize:vertical}
+input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--blue-2);outline-offset:1px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:10px;padding:11px 16px;font:600 14px var(--body);cursor:pointer;background:var(--blue);color:#fff}
+.btn.gold{background:var(--gold);color:#0f3a75}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:transparent;color:var(--err);border:1px solid var(--line)}
+.btn.sm{padding:7px 12px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.msg{padding:10px 12px;border-radius:10px;font-size:14px}
+.msg.err{background:var(--err-soft);color:var(--err)}
+.msg.ok{background:var(--ok-soft);color:var(--ok)}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
+.pill.open{background:var(--ok-soft);color:var(--ok)}
+.pill.closed{background:var(--line);color:var(--muted)}
+.pill.full{background:var(--warn-soft);color:var(--warn)}
+.ev{display:grid;gap:10px}
+.ev .top{display:flex;gap:14px;align-items:flex-start}
+.date{flex:none;width:56px;text-align:center;border-radius:12px;background:var(--blue);color:#fff;padding:7px 0}
+.date b{display:block;font:800 26px/1 var(--display)}
+.date small{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)}
+.ev h3{font-size:24px}
+.ev .meta{font-size:13px;color:var(--muted)}
+.people{display:grid;gap:8px;border-top:1px dashed var(--line);padding-top:10px}
+.person{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.person span{font-weight:500;min-width:0}
+.person .yes{color:var(--ok);font-size:13px;font-weight:600;margin-right:6px}
+.list{display:grid;gap:0}
+.li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.li:last-child{border-bottom:0}
+.li .grow{flex:1;min-width:160px}
+.hero{padding-block:36px 10px}
+.hero h1{font-size:40px;margin-bottom:8px}
+.code{letter-spacing:.4em;font:600 24px/1 var(--body);text-align:center}
+.empty{text-align:center;padding:30px 10px;color:var(--muted)}
+details summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--blue-2)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:50;max-width:calc(100% - 32px)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><symbol id="flag" viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="36" rx="4" fill="#fff"/><path d="M38 2v32a4 4 0 0 1-4 4H2Z" fill="#f26a1b"/></symbol></svg>
+
+<header>
+  <div class="wrap">
+    <div class="hbar">
+      <a class="logo" href="/" style="color:inherit;text-decoration:none"><svg><use href="#flag"/></svg><div><b>GOLD</b> <small>Iscrizioni</small></div></a>
+      <div class="who" id="who" hidden></div>
+    </div>
+    <nav class="tabs" id="tabs" hidden></nav>
+  </div>
+</header>
+
+<main class="wrap" id="app"><p class="empty">Caricamento…</p></main>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = "https://gwjhvfnfmlyiidqnuivs.supabase.co";
+const SUPABASE_KEY = "sb_publishable_5bXqfp3JD_soWMnz7zuwow__T_15mpC";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const TZ = "Europe/Zurich";
+
+const $app = document.getElementById("app");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = (d, o) => new Intl.DateTimeFormat("it-CH", {timeZone: TZ, ...o}).format(new Date(d));
+const fmtFull = d => fmt(d, {weekday:"long", day:"numeric", month:"long", hour:"2-digit", minute:"2-digit"});
+const deadline = ev => new Date(new Date(ev.starts_at).getTime() - ev.cutoff_hours * 3600e3);
+const isOpen = ev => ev.published && Date.now() < deadline(ev).getTime();
+function toast(t){const el=document.getElementById("toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2800)}
+function errText(e){
+  const m = e?.message || String(e);
+  if (/completo/i.test(m)) return "L'evento è al completo.";
+  if (/row-level security|violates/i.test(m)) return "Operazione non consentita: le iscrizioni per questo evento sono chiuse.";
+  if (/rate limit|security purposes/i.test(m)) return "Troppe richieste ravvicinate: attendi un minuto e riprova.";
+  if (/expired|invalid/i.test(m)) return "Codice errato o scaduto. Controlla l'ultima email ricevuta o richiedine uno nuovo.";
+  return m;
+}
+
+const S = { me: null, tab: "eventi" };
+
+// ─── Accesso con codice via email ───
+function renderLogin(step = 1, email = "", note = "") {
+  document.getElementById("who").hidden = true;
+  document.getElementById("tabs").hidden = true;
+  $app.innerHTML = `
+  <div class="hero"><h1>Iscrizioni agli eventi GOLD</h1>
+  <p class="muted">Allenamenti, gare e trasferte. Entri con la tua email: ricevi un codice, niente password.</p></div>
+  <div class="card stack">
+    ${note ? `<div class="msg ${note.startsWith("!") ? "err" : "ok"}">${esc(note.replace(/^!/, ""))}</div>` : ""}
+    ${step === 1 ? `
+      <form id="f1" class="stack">
+        <label for="email">La tua email di socio
+          <input id="email" type="email" required autocomplete="email" inputmode="email" value="${esc(email)}" placeholder="nome@esempio.ch"></label>
+        <button class="btn" type="submit">Ricevi il codice</button>
+      </form>
+      <!-- TEMPORANEO: accesso con password per i test, da togliere quando l'invio email (SMTP) è configurato -->
+      <details><summary>Accesso di prova con password</summary>
+        <form id="fpw" class="stack" style="padding-top:10px">
+          <label for="pwemail">Email<input id="pwemail" type="email" required autocomplete="username" value="${esc(email)}"></label>
+          <label for="pw">Password di prova<input id="pw" type="password" required autocomplete="current-password"></label>
+          <button class="btn ghost" type="submit">Entra con password</button>
+        </form>
+      </details>` : `
+      <form id="f2" class="stack">
+        <p class="small">Abbiamo inviato un codice a <b>${esc(email)}</b>. Controlla anche lo spam.</p>
+        <label for="otp">Codice ricevuto
+          <input id="otp" class="code" required inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="••••••"></label>
+        <button class="btn" type="submit">Entra</button>
+        <button class="btn ghost" type="button" id="back">Usa un'altra email</button>
+      </form>`}
+  </div>`;
+  if (step === 1) {
+    document.getElementById("f1").onsubmit = async e => {
+      e.preventDefault();
+      const btn = e.submitter; btn.disabled = true;
+      const em = document.getElementById("email").value.trim().toLowerCase();
+      try {
+        const { data: ok, error } = await sb.rpc("is_member_email", { p_email: em });
+        if (error) throw error;
+        if (!ok) return renderLogin(1, em, "!Questa email non è nell'elenco soci. Chiedi al responsabile del GOLD di aggiungerla.");
+        const { error: e2 } = await sb.auth.signInWithOtp({ email: em, options: { shouldCreateUser: true, emailRedirectTo: location.origin + "/iscrizioni/" } });
+        if (e2) throw e2;
+        renderLogin(2, em);
+      } catch (x) { renderLogin(1, em, "!" + errText(x)); }
+    };
+    document.getElementById("fpw").onsubmit = async e => {
+      e.preventDefault();
+      e.submitter.disabled = true;
+      const em = document.getElementById("pwemail").value.trim().toLowerCase();
+      const { error } = await sb.auth.signInWithPassword({ email: em, password: document.getElementById("pw").value });
+      if (error) return renderLogin(1, em, "!Email o password di prova non corretti.");
+    };
+  } else {
+    document.getElementById("otp").focus();
+    document.getElementById("back").onclick = () => renderLogin(1, email);
+    document.getElementById("f2").onsubmit = async e => {
+      e.preventDefault();
+      const btn = e.submitter; btn.disabled = true;
+      const token = document.getElementById("otp").value.replace(/\D/g, "");
+      const { error } = await sb.auth.verifyOtp({ email, token, type: "email" });
+      if (error) return renderLogin(2, email, "!" + errText(error));
+      // onAuthStateChange (SIGNED_IN) avvia l'app
+    };
+  }
+}
+
+// ─── Avvio ───
+async function boot() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return renderLogin();
+  const email = session.user.email.toLowerCase();
+  const { data: me, error } = await sb.from("members").select("*").eq("email", email).maybeSingle();
+  if (error || !me || !me.active) {
+    await sb.auth.signOut();
+    return renderLogin(1, email, "!Il tuo accesso non è attivo. Contatta il responsabile del GOLD.");
+  }
+  S.me = me;
+  const who = document.getElementById("who");
+  who.hidden = false;
+  who.innerHTML = `${esc(me.full_name)}<br><button id="logout">Esci</button>`;
+  document.getElementById("logout").onclick = async () => { await sb.auth.signOut(); S.me = null; renderLogin(); };
+  const tabs = [["eventi","Eventi"],["famiglia","La mia famiglia"]];
+  if (me.is_admin) tabs.push(["gestione","Gestione eventi"],["soci","Soci"]);
+  const nav = document.getElementById("tabs");
+  nav.hidden = false;
+  nav.innerHTML = tabs.map(([k,l]) => `<button data-t="${k}" class="${k===S.tab?"on":""}">${l}</button>`).join("");
+  nav.querySelectorAll("button").forEach(b => b.onclick = () => { S.tab = b.dataset.t; nav.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); show(); });
+  show();
+}
+function show(){ ({eventi:viewEvents, famiglia:viewFamily, gestione:viewAdminEvents, soci:viewMembers})[S.tab](); }
+
+// ─── Eventi (socio) ───
+async function viewEvents() {
+  $app.innerHTML = `<p class="empty">Caricamento eventi…</p>`;
+  const since = new Date(Date.now() - 6 * 3600e3).toISOString();
+  const [ev, pa, rg, ct] = await Promise.all([
+    sb.from("events").select("*").eq("published", true).gte("starts_at", since).order("starts_at"),
+    sb.from("participants").select("*").eq("member_id", S.me.id).order("created_at"),
+    sb.from("registrations").select("event_id,participant_id"),
+    sb.rpc("event_counts"),
+  ]);
+  const err = ev.error || pa.error || rg.error || ct.error;
+  if (err) { $app.innerHTML = `<div class="msg err">${esc(errText(err))}</div>`; return; }
+  const counts = Object.fromEntries((ct.data || []).map(r => [r.event_id, Number(r.n)]));
+  const mine = new Set(rg.data.map(r => r.event_id + "|" + r.participant_id));
+  if (!ev.data.length) { $app.innerHTML = `<div class="card empty">Nessun evento in programma per ora.<br>Torna a controllare più avanti.</div>`; return; }
+  $app.innerHTML = `<div class="stack">${ev.data.map(e => {
+    const open = isOpen(e), n = counts[e.id] || 0, full = e.capacity && n >= e.capacity;
+    const status = !open ? `<span class="pill closed">Iscrizioni chiuse</span>`
+      : full ? `<span class="pill full">Al completo</span>`
+      : `<span class="pill open">Aperte fino a ${esc(fmt(deadline(e), {weekday:"short", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"}))}</span>`;
+    return `<article class="card ev">
+      <div class="top">
+        <div class="date"><b>${fmt(e.starts_at,{day:"numeric"})}</b><small>${fmt(e.starts_at,{month:"short"})}</small></div>
+        <div style="min-width:0">
+          <h3>${esc(e.title)}</h3>
+          <div class="meta">${esc(fmtFull(e.starts_at))}${e.location ? " · " + esc(e.location) : ""}</div>
+          <div class="meta" style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">${status}<span>${n}${e.capacity ? " / " + e.capacity : ""} iscritti</span></div>
+        </div>
+      </div>
+      ${e.description ? `<p class="small" style="white-space:pre-line">${esc(e.description)}</p>` : ""}
+      <div class="people">${pa.data.map(p => {
+        const on = mine.has(e.id + "|" + p.id);
+        return `<div class="person"><span>${esc(p.full_name)}</span><div>
+          ${on ? `<span class="yes">✓ Iscritto</span>` : ""}
+          <button class="btn sm ${on ? "ghost" : "gold"}" data-ev="${e.id}" data-p="${p.id}" data-on="${on?1:0}" ${!open || (!on && full) ? "disabled" : ""}>${on ? "Annulla" : "Iscrivi"}</button>
+        </div></div>`;}).join("")}
+      </div>
+    </article>`;}).join("")}</div>`;
+  $app.querySelectorAll("button[data-ev]").forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    const { ev: event_id, p: participant_id } = b.dataset;
+    const q = b.dataset.on === "1"
+      ? sb.from("registrations").delete().eq("event_id", event_id).eq("participant_id", participant_id)
+      : sb.from("registrations").insert({ event_id, participant_id });
+    const { error } = await q;
+    if (error) { toast(errText(error)); b.disabled = false; return; }
+    toast(b.dataset.on === "1" ? "Iscrizione annullata" : "Iscrizione registrata");
+    viewEvents();
+  });
+}
+
+// ─── Famiglia ───
+async function viewFamily() {
+  const { data, error } = await sb.from("participants").select("*").eq("member_id", S.me.id).order("created_at");
+  if (error) { $app.innerHTML = `<div class="msg err">${esc(errText(error))}</div>`; return; }
+  $app.innerHTML = `<div class="stack">
+    <div class="card stack"><h2>La mia famiglia</h2>
+      <p class="small muted">Le persone che puoi iscrivere agli eventi con il tuo account, ad esempio i figli.</p>
+      <div class="list">${data.map(p => `<div class="li"><span class="grow">${esc(p.full_name)}${p.birth_year ? ` <span class="muted small">(${p.birth_year})</span>` : ""}</span>
+        <button class="btn sm ghost" data-ren="${p.id}">Rinomina</button>
+        ${data.length > 1 ? `<button class="btn sm danger" data-del="${p.id}">Rimuovi</button>` : ""}</div>`).join("")}</div>
+    </div>
+    <form class="card stack" id="fadd"><h3>Aggiungi una persona</h3>
+      <div class="row"><label for="pname">Nome e cognome<input id="pname" required></label>
+      <label for="pyear">Anno di nascita (facoltativo)<input id="pyear" type="number" min="1900" max="2100" inputmode="numeric"></label></div>
+      <button class="btn" type="submit">Aggiungi</button></form></div>`;
+  document.getElementById("fadd").onsubmit = async e => {
+    e.preventDefault();
+    const y = document.getElementById("pyear").value;
+    const { error } = await sb.from("participants").insert({ member_id: S.me.id, full_name: document.getElementById("pname").value.trim(), birth_year: y ? Number(y) : null });
+    if (error) return toast(errText(error));
+    toast("Persona aggiunta"); viewFamily();
+  };
+  $app.querySelectorAll("[data-ren]").forEach(b => b.onclick = () => {
+    const li = b.closest(".li"), p = data.find(x => x.id === b.dataset.ren);
+    li.innerHTML = `<input class="grow" id="ren-${p.id}" value="${esc(p.full_name)}"><button class="btn sm">Salva</button>`;
+    li.querySelector("button").onclick = async () => {
+      const { error } = await sb.from("participants").update({ full_name: li.querySelector("input").value.trim() }).eq("id", p.id);
+      if (error) return toast(errText(error)); toast("Salvato"); viewFamily();
+    };
+  });
+  $app.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+    if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Conferma rimozione"; return; }
+    const { error } = await sb.from("participants").delete().eq("id", b.dataset.del);
+    if (error) return toast(errText(error)); toast("Persona rimossa"); viewFamily();
+  });
+}
+
+// ─── Gestione eventi (admin) ───
+const toLocalInput = d => { const x = new Date(d); const p = n => String(n).padStart(2,"0");
+  return `${x.getFullYear()}-${p(x.getMonth()+1)}-${p(x.getDate())}T${p(x.getHours())}:${p(x.getMinutes())}`; };
+async function viewAdminEvents(editId = null) {
+  const [ev, ct] = await Promise.all([
+    sb.from("events").select("*").order("starts_at", { ascending: false }).limit(100),
+    sb.rpc("event_counts"),
+  ]);
+  if (ev.error) { $app.innerHTML = `<div class="msg err">${esc(errText(ev.error))}</div>`; return; }
+  const counts = Object.fromEntries((ct.data || []).map(r => [r.event_id, Number(r.n)]));
+  const cur = ev.data.find(x => x.id === editId) || {};
+  $app.innerHTML = `<div class="stack">
+    <form class="card stack" id="fev"><h2>${editId ? "Modifica evento" : "Nuovo evento"}</h2>
+      <label for="etitle">Titolo<input id="etitle" required value="${esc(cur.title)}" placeholder="Allenamento in palestra"></label>
+      <div class="row">
+        <label for="estart">Data e ora<input id="estart" type="datetime-local" required value="${cur.starts_at ? toLocalInput(cur.starts_at) : ""}"></label>
+        <label for="eloc">Luogo<input id="eloc" value="${esc(cur.location)}" placeholder="Palestra Liceo Savosa"></label>
+      </div>
+      <div class="row">
+        <label for="ecut">Iscrizioni chiuse quante ore prima<input id="ecut" type="number" min="0" required value="${cur.cutoff_hours ?? 24}" inputmode="numeric"></label>
+        <label for="ecap">Posti massimi (vuoto = illimitati)<input id="ecap" type="number" min="1" value="${cur.capacity ?? ""}" inputmode="numeric"></label>
+      </div>
+      <label for="edesc">Descrizione<textarea id="edesc" placeholder="Materiale: bussola, chip, pila frontale…">${esc(cur.description)}</textarea></label>
+      <label style="display:flex;gap:8px;align-items:center;font-weight:500" for="epub"><input id="epub" type="checkbox" style="width:auto" ${cur.published === false ? "" : "checked"}> Visibile ai soci</label>
+      <p class="small muted" id="cutinfo"></p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="submit">${editId ? "Salva modifiche" : "Crea evento"}</button>
+      ${editId ? `<button class="btn ghost" type="button" id="cancel">Annulla</button>` : ""}</div>
+    </form>
+    <div class="card"><h2 style="margin-bottom:6px">Eventi</h2>
+      <div class="list">${ev.data.length ? ev.data.map(e => `<div class="li" style="display:block">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <div class="grow"><b>${esc(e.title)}</b>${e.published ? "" : ` <span class="pill closed">nascosto</span>`}<br>
+            <span class="small muted">${esc(fmtFull(e.starts_at))} · chiusura ${e.cutoff_hours} h prima · ${counts[e.id]||0}${e.capacity?"/"+e.capacity:""} iscritti</span></div>
+          <button class="btn sm ghost" data-edit="${e.id}">Modifica</button>
+          <button class="btn sm danger" data-del="${e.id}">Elimina</button>
+        </div>
+        <details data-reg="${e.id}"><summary>Vedi iscritti</summary><div class="small" style="padding-top:8px">…</div></details>
+      </div>`).join("") : `<p class="empty">Ancora nessun evento.</p>`}</div></div></div>`;
+  const upd = () => { const v = document.getElementById("estart").value, h = Number(document.getElementById("ecut").value || 0);
+    document.getElementById("cutinfo").textContent = v ? "Le iscrizioni chiuderanno " + fmtFull(new Date(new Date(v).getTime() - h*3600e3)) + "." : ""; };
+  ["estart","ecut"].forEach(id => document.getElementById(id).oninput = upd); upd();
+  if (editId) document.getElementById("cancel").onclick = () => viewAdminEvents();
+  document.getElementById("fev").onsubmit = async e => {
+    e.preventDefault();
+    const cap = document.getElementById("ecap").value;
+    const row = { title: document.getElementById("etitle").value.trim(), location: document.getElementById("eloc").value.trim() || null,
+      starts_at: new Date(document.getElementById("estart").value).toISOString(), cutoff_hours: Number(document.getElementById("ecut").value),
+      capacity: cap ? Number(cap) : null, description: document.getElementById("edesc").value.trim() || null, published: document.getElementById("epub").checked };
+    const { error } = editId ? await sb.from("events").update(row).eq("id", editId) : await sb.from("events").insert(row);
+    if (error) return toast(errText(error));
+    toast(editId ? "Evento aggiornato" : "Evento creato"); viewAdminEvents();
+  };
+  $app.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => { viewAdminEvents(b.dataset.edit); scrollTo(0,0); });
+  $app.querySelectorAll("button[data-del]").forEach(b => b.onclick = async () => {
+    if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Conferma eliminazione"; return; }
+    const { error } = await sb.from("events").delete().eq("id", b.dataset.del);
+    if (error) return toast(errText(error)); toast("Evento eliminato"); viewAdminEvents();
+  });
+  $app.querySelectorAll("details[data-reg]").forEach(d => d.ontoggle = async () => {
+    if (!d.open) return;
+    const box = d.querySelector("div");
+    const { data, error } = await sb.from("registrations").select("created_at, participants(full_name, members(full_name,email))").eq("event_id", d.dataset.reg).order("created_at");
+    if (error) { box.textContent = errText(error); return; }
+    if (!data.length) { box.textContent = "Nessun iscritto."; return; }
+    const lines = data.map((r,i) => `${i+1}. ${r.participants.full_name}` + (r.participants.members.full_name !== r.participants.full_name ? ` (socio: ${r.participants.members.full_name})` : ""));
+    box.innerHTML = `<ol style="padding-left:20px">${data.map(r => `<li>${esc(r.participants.full_name)} <span class="muted">· ${esc(r.participants.members.email)}</span></li>`).join("")}</ol>
+      <button class="btn sm ghost" style="margin-top:8px">Copia elenco</button>`;
+    box.querySelector("button").onclick = async () => { try { await navigator.clipboard.writeText(lines.join("\n")); toast("Elenco copiato"); } catch { toast("Copia non riuscita"); } };
+  });
+}
+
+// ─── Soci (admin) ───
+async function viewMembers() {
+  const { data, error } = await sb.from("members").select("*").order("full_name");
+  if (error) { $app.innerHTML = `<div class="msg err">${esc(errText(error))}</div>`; return; }
+  $app.innerHTML = `<div class="stack">
+    <form class="card stack" id="fm"><h2>Aggiungi soci</h2>
+      <p class="small muted">Una riga per socio: <b>Nome Cognome; email</b>. Puoi incollare un elenco intero da Excel.</p>
+      <label for="mlist">Elenco<textarea id="mlist" placeholder="Anna Rossi; anna.rossi@esempio.ch&#10;Marco Bianchi; marco@esempio.ch"></textarea></label>
+      <button class="btn" type="submit">Aggiungi</button></form>
+    <div class="card"><h2 style="margin-bottom:6px">Soci (${data.length})</h2>
+      <input id="mfind" placeholder="Cerca per nome o email" style="margin-bottom:6px">
+      <div class="list" id="mlistbox">${data.map(m => `<div class="li" data-s="${esc((m.full_name+" "+m.email).toLowerCase())}">
+        <div class="grow"><b>${esc(m.full_name)}</b>${m.is_admin ? ` <span class="pill open">admin</span>` : ""}${m.active ? "" : ` <span class="pill closed">disattivato</span>`}<br><span class="small muted">${esc(m.email)}</span></div>
+        ${m.id === S.me.id ? `<span class="small muted">sei tu</span>` : `
+        <button class="btn sm ghost" data-act="${m.id}" data-v="${m.active?0:1}">${m.active ? "Disattiva" : "Riattiva"}</button>
+        <button class="btn sm ghost" data-adm="${m.id}" data-v="${m.is_admin?0:1}">${m.is_admin ? "Togli admin" : "Rendi admin"}</button>`}
+      </div>`).join("")}</div></div></div>`;
+  document.getElementById("mfind").oninput = e => { const q = e.target.value.toLowerCase();
+    $app.querySelectorAll("#mlistbox .li").forEach(li => li.hidden = q && !li.dataset.s.includes(q)); };
+  document.getElementById("fm").onsubmit = async e => {
+    e.preventDefault();
+    const rows = [], bad = [];
+    document.getElementById("mlist").value.split(/\n/).map(l => l.trim()).filter(Boolean).forEach(l => {
+      const parts = l.split(/[;\t,]/).map(x => x.trim()).filter(Boolean);
+      const email = parts.find(x => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x));
+      const name = parts.filter(x => x !== email).join(" ");
+      if (email && name) rows.push({ email: email.toLowerCase(), full_name: name }); else bad.push(l);
+    });
+    if (!rows.length) return toast("Nessuna riga valida: usa «Nome Cognome; email».");
+    const { error } = await sb.from("members").upsert(rows, { onConflict: "email", ignoreDuplicates: true });
+    if (error) return toast(errText(error));
+    toast(`${rows.length} soci elaborati` + (bad.length ? `, ${bad.length} righe ignorate` : "")); viewMembers();
+  };
+  $app.querySelectorAll("[data-act]").forEach(b => b.onclick = async () => {
+    const { error } = await sb.from("members").update({ active: b.dataset.v === "1" }).eq("id", b.dataset.act);
+    if (error) return toast(errText(error)); viewMembers();
+  });
+  $app.querySelectorAll("[data-adm]").forEach(b => b.onclick = async () => {
+    const { error } = await sb.from("members").update({ is_admin: b.dataset.v === "1" }).eq("id", b.dataset.adm);
+    if (error) return toast(errText(error)); viewMembers();
+  });
+}
+
+sb.auth.onAuthStateChange((ev) => { if (ev === "SIGNED_IN" && !S.me) setTimeout(boot, 0); });
+boot();
+</script>
+</body>
+</html>
