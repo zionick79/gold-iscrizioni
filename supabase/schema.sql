@@ -159,3 +159,101 @@ revoke execute on function public.check_capacity() from public, anon, authentica
 
 -- Primo amministratore (sostituire con l'email reale):
 -- insert into public.members(email, full_name, is_admin) values ('admin@esempio.ch', 'Nome Cognome', true);
+
+-- ═══ Gestione soci e quote sociali ═══
+alter table public.members
+  add column phone text, add column address text, add column zip text, add column city text,
+  add column birth_date date, add column member_since date default current_date,
+  add column category text not null default 'Adulto';
+alter table public.participants add column si_card text;
+
+-- Note riservate agli amministratori
+create table public.member_notes (
+  member_id uuid primary key references public.members(id) on delete cascade,
+  notes text not null default '',
+  updated_at timestamptz not null default now()
+);
+
+-- Impostazioni (es. istruzioni di pagamento mostrate ai soci)
+create table public.settings (key text primary key, value text not null default '');
+insert into public.settings(key, value) values ('istruzioni_pagamento', '');
+
+-- Tariffe per anno e categoria; quote dei singoli soci
+create table public.fee_types (
+  id uuid primary key default gen_random_uuid(),
+  year int not null check (year between 2000 and 2100),
+  category text not null,
+  amount numeric(8,2) not null check (amount >= 0),
+  due_date date,
+  unique (year, category)
+);
+create table public.fees (
+  id uuid primary key default gen_random_uuid(),
+  member_id uuid not null references public.members(id) on delete cascade,
+  year int not null check (year between 2000 and 2100),
+  description text not null,
+  amount numeric(8,2) not null check (amount >= 0),
+  due_date date, paid_at date, paid_amount numeric(8,2), method text, note text,
+  fee_type_id uuid references public.fee_types(id) on delete set null,
+  created_at timestamptz not null default now(),
+  unique (member_id, fee_type_id)
+);
+create index on public.fees(year);
+create index on public.fees(member_id);
+
+-- Il socio modifica solo i propri recapiti (security invoker: current_user è il ruolo reale)
+create or replace function public.protect_member_fields() returns trigger
+language plpgsql security invoker set search_path = '' as $$
+begin
+  if public.is_admin() or current_user in ('postgres','supabase_admin','service_role') then
+    return new;
+  end if;
+  if new.email is distinct from old.email or new.full_name is distinct from old.full_name
+     or new.is_admin is distinct from old.is_admin or new.active is distinct from old.active
+     or new.category is distinct from old.category or new.member_since is distinct from old.member_since then
+    raise exception 'Questi dati li può modificare solo il comitato' using errcode = 'P0001';
+  end if;
+  return new;
+end $$;
+create trigger trg_protect_member before update on public.members
+  for each row execute function public.protect_member_fields();
+revoke execute on function public.protect_member_fields() from public, anon, authenticated;
+
+create policy members_update_self on public.members for update to authenticated
+  using (id = public.current_member_id()) with check (id = public.current_member_id());
+
+-- Genera le quote dell'anno per tutti i soci attivi secondo la loro categoria
+create or replace function public.generate_fees(p_year int) returns int
+language plpgsql security definer set search_path = '' as $$
+declare n int;
+begin
+  if not public.is_admin() then raise exception 'Solo amministratori'; end if;
+  insert into public.fees(member_id, year, description, amount, due_date, fee_type_id)
+  select m.id, p_year, 'Tassa sociale ' || p_year || ' · ' || t.category, t.amount, t.due_date, t.id
+  from public.members m join public.fee_types t on t.year = p_year and t.category = m.category
+  where m.active
+  on conflict (member_id, fee_type_id) do nothing;
+  get diagnostics n = row_count;
+  return n;
+end $$;
+revoke execute on function public.generate_fees(int) from public, anon;
+grant execute on function public.generate_fees(int) to authenticated;
+
+alter table public.member_notes enable row level security;
+alter table public.settings enable row level security;
+alter table public.fee_types enable row level security;
+alter table public.fees enable row level security;
+create policy notes_admin on public.member_notes for all to authenticated
+  using (public.is_admin()) with check (public.is_admin());
+create policy settings_read on public.settings for select to authenticated
+  using (public.current_member_id() is not null);
+create policy settings_admin on public.settings for all to authenticated
+  using (public.is_admin()) with check (public.is_admin());
+create policy fee_types_read on public.fee_types for select to authenticated
+  using (public.current_member_id() is not null);
+create policy fee_types_admin on public.fee_types for all to authenticated
+  using (public.is_admin()) with check (public.is_admin());
+create policy fees_read on public.fees for select to authenticated
+  using (member_id = public.current_member_id() or public.is_admin());
+create policy fees_admin on public.fees for all to authenticated
+  using (public.is_admin()) with check (public.is_admin());
