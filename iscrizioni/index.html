@@ -102,6 +102,18 @@ details summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--blue-2
 .back{background:none;border:0;color:var(--blue-2);font:600 14px var(--body);cursor:pointer;padding:0}
 .paybox{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;width:100%;padding-top:8px}
 @media (max-width:560px){.paybox{grid-template-columns:1fr 1fr}}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 13px;border-radius:999px;font:500 13px var(--body);cursor:pointer}
+.chips button span{color:var(--muted);font-size:12px}
+.chips button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.chips button.on span{color:var(--gold)}
+.pill.kind-allenamento{background:#d7ecff;color:#0f4a86}
+.pill.kind-gara{background:#ffe7c2;color:#8a4a00}
+.pill.kind-evento{background:#ece2ff;color:#5530a0}
+.card.ev.kind-gara{border-left:4px solid #f29a1b}
+.card.ev.kind-allenamento{border-left:4px solid var(--blue-2)}
+.card.ev.kind-evento{border-left:4px solid #8a63d2}
+fieldset{border:1px solid var(--line);margin:0;min-width:0}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:50;max-width:calc(100% - 32px)}
 [hidden]{display:none!important}
 </style>

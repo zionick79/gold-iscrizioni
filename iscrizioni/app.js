@@ -25,6 +25,8 @@ const isOpen = ev => ev.published && Date.now() < deadline(ev).getTime();
 function toast(t){const el=$("toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2800)}
 function errText(e){
   const m = e?.message || String(e);
+  if (/trasporto al completo/i.test(m)) return "Il trasporto è al completo.";
+  if (/non è previsto il trasporto/i.test(m)) return "Per questo evento non è previsto il trasporto.";
   if (/completo/i.test(m)) return "L'evento è al completo.";
   if (/comitato/i.test(m)) return m;
   if (/duplicate key.*email/i.test(m)) return "Esiste già un socio con questa email.";
@@ -147,52 +149,85 @@ function go(tab) {
 }
 
 // ─── Eventi (socio) ───
+const KINDS = { allenamento: ["Allenamento", "Allenamenti"], gara: ["Gara", "Gare"], evento: ["Evento", "Eventi"] };
+const kindPill = k => `<span class="pill kind-${k}">${KINDS[k]?.[0] || k}</span>`;
+const kindChips = (cur, counts) => `<div class="chips">${[["", "Tutti"], ...Object.entries(KINDS).map(([k, v]) => [k, v[1]])]
+  .map(([k, l]) => `<button type="button" data-kind="${k}" class="${cur === k ? "on" : ""}">${l}${counts ? ` <span>${counts[k || "*"] || 0}</span>` : ""}</button>`).join("")}</div>`;
+const EF = { kind: "" };
 async function viewEvents() {
   const since = new Date(Date.now() - 6 * 3600e3).toISOString();
   const [ev, pa, rg, ct] = await Promise.all([
     sb.from("events").select("*").eq("published", true).gte("starts_at", since).order("starts_at"),
     sb.from("participants").select("*").eq("member_id", S.me.id).order("created_at"),
-    sb.from("registrations").select("event_id,participant_id"),
+    sb.from("registrations").select("event_id,participant_id,needs_transport"),
     sb.rpc("event_counts"),
   ]);
   const err = ev.error || pa.error || rg.error || ct.error;
   if (err) return fail(err);
-  const counts = Object.fromEntries((ct.data || []).map(r => [r.event_id, Number(r.n)]));
-  const mine = new Set(rg.data.map(r => r.event_id + "|" + r.participant_id));
-  if (!ev.data.length) { $app.innerHTML = `<div class="card empty">Nessun evento in programma per ora.<br>Torna a controllare più avanti.</div>`; return; }
-  $app.innerHTML = `<div class="stack">${ev.data.map(e => {
-    const open = isOpen(e), n = counts[e.id] || 0, full = e.capacity && n >= e.capacity;
-    const status = !open ? `<span class="pill closed">Iscrizioni chiuse</span>`
-      : full ? `<span class="pill full">Al completo</span>`
-      : `<span class="pill open">Aperte fino a ${esc(fmt(deadline(e), {weekday:"short", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"}))}</span>`;
-    return `<article class="card ev">
-      <div class="top">
-        <div class="date"><b>${fmt(e.starts_at,{day:"numeric"})}</b><small>${fmt(e.starts_at,{month:"short"})}</small></div>
-        <div style="min-width:0">
-          <h3>${esc(e.title)}</h3>
-          <div class="meta">${esc(fmtFull(e.starts_at))}${e.location ? " · " + esc(e.location) : ""}</div>
-          <div class="meta btns" style="margin-top:6px">${status}<span>${n}${e.capacity ? " / " + e.capacity : ""} iscritti</span></div>
-        </div>
-      </div>
-      ${e.description ? `<p class="small" style="white-space:pre-line">${esc(e.description)}</p>` : ""}
-      <div class="people">${pa.data.map(p => {
-        const on = mine.has(e.id + "|" + p.id);
-        return `<div class="person"><span>${esc(p.full_name)}</span><div>
-          ${on ? `<span class="yes">✓ Iscritto</span>` : ""}
-          <button class="btn sm ${on ? "ghost" : "gold"}" data-ev="${e.id}" data-p="${p.id}" data-on="${on?1:0}" ${!open || (!on && full) ? "disabled" : ""}>${on ? "Annulla" : "Iscrivi"}</button>
-        </div></div>`;}).join("")}
-      </div>
-    </article>`;}).join("")}</div>`;
-  $app.querySelectorAll("button[data-ev]").forEach(b => b.onclick = async () => {
+  const counts = Object.fromEntries((ct.data || []).map(r => [r.event_id, { n: Number(r.n), t: Number(r.t) }]));
+  const mine = Object.fromEntries(rg.data.map(r => [r.event_id + "|" + r.participant_id, r]));
+  const byKind = { "*": ev.data.length }; ev.data.forEach(e => byKind[e.kind] = (byKind[e.kind] || 0) + 1);
+  const list = ev.data.filter(e => !EF.kind || e.kind === EF.kind);
+  $app.innerHTML = `<div class="stack">${kindChips(EF.kind, byKind)}
+    ${list.length ? list.map(e => eventCard(e, counts[e.id] || { n: 0, t: 0 }, pa.data, mine)).join("")
+      : `<div class="card empty">Nessun${EF.kind === "gara" ? "a gara" : EF.kind ? " " + KINDS[EF.kind][0].toLowerCase() : " evento"} in programma per ora.<br>Torna a controllare più avanti.</div>`}</div>`;
+  $app.querySelectorAll("[data-kind]").forEach(b => b.onclick = () => { EF.kind = b.dataset.kind; viewEvents(); });
+  $app.querySelectorAll("button[data-act]").forEach(b => b.onclick = async () => {
     b.disabled = true;
-    const { ev: event_id, p: participant_id } = b.dataset;
-    const { error } = b.dataset.on === "1"
-      ? await sb.from("registrations").delete().eq("event_id", event_id).eq("participant_id", participant_id)
-      : await sb.from("registrations").insert({ event_id, participant_id });
+    const { ev: event_id, p: participant_id, act } = b.dataset;
+    const where = q => q.eq("event_id", event_id).eq("participant_id", participant_id);
+    const { error } =
+      act === "join" ? await sb.from("registrations").insert({ event_id, participant_id, needs_transport: false }) :
+      act === "join-t" ? await sb.from("registrations").insert({ event_id, participant_id, needs_transport: true }) :
+      act === "t-on" ? await where(sb.from("registrations").update({ needs_transport: true })) :
+      act === "t-off" ? await where(sb.from("registrations").update({ needs_transport: false })) :
+      await where(sb.from("registrations").delete());
     if (error) { toast(errText(error)); b.disabled = false; return; }
-    toast(b.dataset.on === "1" ? "Iscrizione annullata" : "Iscrizione registrata");
+    toast({ join: "Iscrizione registrata", "join-t": "Iscrizione con trasporto registrata", "t-on": "Trasporto richiesto", "t-off": "Trasporto annullato", leave: "Iscrizione annullata" }[act]);
     viewEvents();
   });
+}
+function eventCard(e, c, people, mine) {
+  const open = isOpen(e);
+  const full = !e.transport_only && e.capacity && c.n >= e.capacity;
+  const tFull = e.transport && e.transport_seats && c.t >= e.transport_seats;
+  const status = !open ? `<span class="pill closed">Iscrizioni chiuse</span>`
+    : full ? `<span class="pill full">Al completo</span>`
+    : `<span class="pill open">Aperte fino a ${esc(fmt(deadline(e), {weekday:"short", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"}))}</span>`;
+  const counter = e.transport_only
+    ? `<span>🚐 ${c.t}${e.transport_seats ? " / " + e.transport_seats : ""} posti trasporto</span>`
+    : `<span>${c.n}${e.capacity ? " / " + e.capacity : ""} iscritti</span>${e.transport ? `<span>🚐 ${c.t}${e.transport_seats ? " / " + e.transport_seats : ""} trasporti</span>` : ""}`;
+  const dis = cond => !open || cond ? "disabled" : "";
+  const row = p => {
+    const r = mine[e.id + "|" + p.id], a = `data-ev="${e.id}" data-p="${p.id}"`;
+    if (e.transport_only) return `<div class="person"><span>${esc(p.full_name)}</span><div class="btns">
+      ${r ? `<span class="yes">🚐 Trasporto richiesto</span><button class="btn sm ghost" ${a} data-act="leave" ${dis()}>Annulla</button>`
+          : `<button class="btn sm gold" ${a} data-act="join-t" ${dis(tFull)}>Chiedi il trasporto</button>`}</div></div>`;
+    if (r) return `<div class="person"><span>${esc(p.full_name)}</span><div class="btns">
+      <span class="yes">✓ Iscritto${r.needs_transport ? " · 🚐 con trasporto" : ""}</span>
+      ${e.transport ? (r.needs_transport ? `<button class="btn sm ghost" ${a} data-act="t-off" ${dis()}>Niente trasporto</button>`
+                                        : `<button class="btn sm ghost" ${a} data-act="t-on" ${dis(tFull)}>+ Trasporto</button>`) : ""}
+      <button class="btn sm ghost" ${a} data-act="leave" ${dis()}>Annulla</button></div></div>`;
+    return `<div class="person"><span>${esc(p.full_name)}</span><div class="btns">
+      <button class="btn sm gold" ${a} data-act="join" ${dis(full)}>Iscrivi</button>
+      ${e.transport ? `<button class="btn sm gold" ${a} data-act="join-t" ${dis(full || tFull)}>Iscrivi + 🚐</button>` : ""}</div></div>`;
+  };
+  return `<article class="card ev kind-${e.kind}">
+    <div class="top">
+      <div class="date"><b>${fmt(e.starts_at,{day:"numeric"})}</b><small>${fmt(e.starts_at,{month:"short"})}</small></div>
+      <div style="min-width:0">
+        <div class="btns" style="margin-bottom:4px">${kindPill(e.kind)}${e.transport_only ? `<span class="pill cat">Solo trasporto</span>` : ""}</div>
+        <h3>${esc(e.title)}</h3>
+        <div class="meta">${esc(fmtFull(e.starts_at))}${e.location ? " · " + esc(e.location) : ""}</div>
+        <div class="meta btns" style="margin-top:6px">${status}${counter}</div>
+      </div>
+    </div>
+    ${e.description ? `<p class="small" style="white-space:pre-line">${esc(e.description)}</p>` : ""}
+    ${e.transport ? `<div class="msg info small" style="white-space:pre-line">🚐 <b>Trasporto${tFull ? " al completo" : " organizzato"}</b>${e.transport_info ? "\n" + esc(e.transport_info) : ""}</div>` : ""}
+    ${e.transport_only ? `<p class="small">L'iscrizione alla gara si fa altrove${e.external_url ? `: <a href="${esc(e.external_url)}" target="_blank" rel="noopener">vai all'iscrizione</a>` : ""}. Qui chiedi solo il posto sul trasporto.</p>`
+      : e.external_url ? `<p class="small"><a href="${esc(e.external_url)}" target="_blank" rel="noopener">Informazioni e iscrizione ufficiale</a></p>` : ""}
+    <div class="people">${people.map(row).join("")}</div>
+  </article>`;
 }
 
 // ─── Famiglia (riusata anche nella scheda socio dell'amministratore) ───
@@ -283,55 +318,94 @@ async function viewProfile() {
 // ─── Gestione eventi (admin) ───
 const toLocalInput = d => { const x = new Date(d); const p = n => String(n).padStart(2,"0");
   return `${x.getFullYear()}-${p(x.getMonth()+1)}-${p(x.getDate())}T${p(x.getHours())}:${p(x.getMinutes())}`; };
+const AF = { kind: "" };
 async function viewAdminEvents(editId = null) {
   const [ev, ct] = await Promise.all([
-    sb.from("events").select("*").order("starts_at", { ascending: false }).limit(100),
+    sb.from("events").select("*").order("starts_at", { ascending: false }).limit(200),
     sb.rpc("event_counts"),
   ]);
   if (ev.error) return fail(ev.error);
-  const counts = Object.fromEntries((ct.data || []).map(r => [r.event_id, Number(r.n)]));
-  const cur = ev.data.find(x => x.id === editId) || {};
+  const counts = Object.fromEntries((ct.data || []).map(r => [r.event_id, { n: Number(r.n), t: Number(r.t) }]));
+  const cur = ev.data.find(x => x.id === editId) || { kind: AF.kind || "allenamento" };
+  const byKind = { "*": ev.data.length }; ev.data.forEach(e => byKind[e.kind] = (byKind[e.kind] || 0) + 1);
+  const list = ev.data.filter(e => !AF.kind || e.kind === AF.kind);
   $app.innerHTML = `<div class="stack">
     <form class="card stack" id="fev"><h2>${editId ? "Modifica evento" : "Nuovo evento"}</h2>
-      <label for="etitle">Titolo<input id="etitle" required value="${esc(cur.title)}" placeholder="Allenamento in palestra"></label>
+      <div class="row">
+        <label for="ekind">Tipo<select id="ekind">${Object.entries(KINDS).map(([k, v]) => `<option value="${k}">${v[0]}</option>`).join("")}</select></label>
+        <label for="etitle">Titolo<input id="etitle" required value="${esc(cur.title)}" placeholder="Allenamento in palestra"></label>
+      </div>
       <div class="row">
         <label for="estart">Data e ora<input id="estart" type="datetime-local" required value="${cur.starts_at ? toLocalInput(cur.starts_at) : ""}"></label>
         <label for="eloc">Luogo<input id="eloc" value="${esc(cur.location)}" placeholder="Palestra Liceo Savosa"></label>
       </div>
       <div class="row">
         <label for="ecut">Iscrizioni chiuse quante ore prima<input id="ecut" type="number" min="0" required value="${cur.cutoff_hours ?? 24}" inputmode="numeric"></label>
-        <label for="ecap">Posti massimi (vuoto = illimitati)<input id="ecap" type="number" min="1" value="${cur.capacity ?? ""}" inputmode="numeric"></label>
+        <label for="ecap" id="ecapl">Posti massimi (vuoto = illimitati)<input id="ecap" type="number" min="1" value="${cur.capacity ?? ""}" inputmode="numeric"></label>
       </div>
       <label for="edesc">Descrizione<textarea id="edesc" placeholder="Materiale: bussola, chip, pila frontale…">${esc(cur.description)}</textarea></label>
+      <fieldset class="card stack" style="background:var(--bg)">
+        <label class="check" for="etr"><input id="etr" type="checkbox" ${cur.transport ? "checked" : ""}> 🚐 Trasporto organizzato (furgoni / auto)</label>
+        <div class="stack" id="trbox">
+          <label class="check" for="etonly"><input id="etonly" type="checkbox" ${cur.transport_only ? "checked" : ""}> Solo trasporto: l'iscrizione alla gara si fa altrove (es. OL-Events), qui ci si annuncia solo per il viaggio</label>
+          <div class="row">
+            <label for="eseats">Posti sul trasporto (vuoto = illimitati)<input id="eseats" type="number" min="1" value="${cur.transport_seats ?? ""}" inputmode="numeric"></label>
+            <label for="eurl">Link iscrizione ufficiale (facoltativo)<input id="eurl" type="url" value="${esc(cur.external_url)}" placeholder="https://entry.ol-events.ch/…"></label>
+          </div>
+          <label for="etinfo">Informazioni sul trasporto<textarea id="etinfo" style="min-height:70px" placeholder="Partenza ore 7:00 dal Liceo di Savosa, rientro verso le 18:00. Costo CHF 10.–">${esc(cur.transport_info)}</textarea></label>
+        </div>
+      </fieldset>
       <label class="check" for="epub"><input id="epub" type="checkbox" ${cur.published === false ? "" : "checked"}> Visibile ai soci</label>
       <p class="small muted" id="cutinfo"></p>
       <div class="btns"><button class="btn" type="submit">${editId ? "Salva modifiche" : "Crea evento"}</button>
       ${editId ? `<button class="btn ghost" type="button" id="cancel">Annulla</button>` : ""}</div>
     </form>
-    <div class="card"><h2 style="margin-bottom:6px">Eventi</h2>
-      <div class="list">${ev.data.length ? ev.data.map(e => `<div class="li" style="display:block">
+    <div class="card stack"><h2>Eventi</h2>${kindChips(AF.kind, byKind)}
+      <div class="list">${list.length ? list.map(e => { const c = counts[e.id] || { n: 0, t: 0 };
+        return `<div class="li" style="display:block">
         <div class="btns">
-          <div class="grow"><b>${esc(e.title)}</b>${e.published ? "" : ` <span class="pill closed">nascosto</span>`}<br>
-            <span class="small muted">${esc(fmtFull(e.starts_at))} · chiusura ${e.cutoff_hours} h prima · ${counts[e.id]||0}${e.capacity?"/"+e.capacity:""} iscritti</span></div>
+          <div class="grow"><div class="btns">${kindPill(e.kind)}${e.transport_only ? `<span class="pill cat">Solo trasporto</span>` : e.transport ? `<span class="pill cat">🚐 Trasporto</span>` : ""}${e.published ? "" : `<span class="pill closed">nascosto</span>`}</div>
+            <b>${esc(e.title)}</b><br>
+            <span class="small muted">${esc(fmtFull(e.starts_at))} · chiusura ${e.cutoff_hours} h prima · ${e.transport_only ? "" : `${c.n}${e.capacity ? "/" + e.capacity : ""} iscritti · `}${e.transport ? `🚐 ${c.t}${e.transport_seats ? "/" + e.transport_seats : ""}` : ""}</span></div>
           <button class="btn sm ghost" data-edit="${e.id}">Modifica</button>
+          <button class="btn sm ghost" data-copy="${e.id}">Duplica</button>
           <button class="btn sm danger" data-del="${e.id}">Elimina</button>
         </div>
-        <details data-reg="${e.id}"><summary>Vedi iscritti</summary><div class="small" style="padding-top:8px">…</div></details>
-      </div>`).join("") : `<p class="empty">Ancora nessun evento.</p>`}</div></div></div>`;
-  const upd = () => { const v = $("estart").value, h = Number($("ecut").value || 0);
-    $("cutinfo").textContent = v ? "Le iscrizioni chiuderanno " + fmtFull(new Date(new Date(v).getTime() - h*3600e3)) + "." : ""; };
-  ["estart","ecut"].forEach(id => $(id).oninput = upd); upd();
+        <details data-reg="${e.id}"><summary>${e.transport_only ? "Vedi chi viaggia" : "Vedi iscritti"}</summary><div class="small" style="padding-top:8px">…</div></details>
+      </div>`; }).join("") : `<p class="empty">Nessun evento.</p>`}</div></div></div>`;
+  $("ekind").value = cur.kind;
+  const sync = () => {
+    $("trbox").hidden = !$("etr").checked;
+    $("ecapl").hidden = $("etr").checked && $("etonly").checked;
+    const v = $("estart").value, h = Number($("ecut").value || 0);
+    $("cutinfo").textContent = v ? "Le iscrizioni chiuderanno " + fmtFull(new Date(new Date(v).getTime() - h*3600e3)) + "." : "";
+  };
+  ["estart","ecut","etr","etonly"].forEach(id => $(id).oninput = sync); sync();
+  $("ekind").onchange = () => { if ($("ekind").value === "gara" && !editId) { $("etr").checked = true; sync(); } };
   if (editId) $("cancel").onclick = () => viewAdminEvents();
   $("fev").onsubmit = async e => {
     e.preventDefault();
-    const row = { title: val("etitle"), location: orNull(val("eloc")), starts_at: new Date($("estart").value).toISOString(),
-      cutoff_hours: Number($("ecut").value), capacity: $("ecap").value ? Number($("ecap").value) : null,
-      description: orNull(val("edesc")), published: $("epub").checked };
+    const tr = $("etr").checked, only = tr && $("etonly").checked;
+    const row = { kind: $("ekind").value, title: val("etitle"), location: orNull(val("eloc")), starts_at: new Date($("estart").value).toISOString(),
+      cutoff_hours: Number($("ecut").value), capacity: !only && $("ecap").value ? Number($("ecap").value) : null,
+      description: orNull(val("edesc")), published: $("epub").checked,
+      transport: tr, transport_only: only, transport_seats: tr && $("eseats").value ? Number($("eseats").value) : null,
+      transport_info: tr ? orNull(val("etinfo")) : null, external_url: orNull(val("eurl")) };
     const { error } = editId ? await sb.from("events").update(row).eq("id", editId) : await sb.from("events").insert(row);
     if (error) return toast(errText(error));
     toast(editId ? "Evento aggiornato" : "Evento creato"); viewAdminEvents();
   };
+  $app.querySelectorAll("[data-kind]").forEach(b => b.onclick = () => { AF.kind = b.dataset.kind; viewAdminEvents(editId); });
   $app.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => { viewAdminEvents(b.dataset.edit); scrollTo(0,0); });
+  // Duplica: precompila il modulo con i dati dell'evento, senza data
+  $app.querySelectorAll("[data-copy]").forEach(b => b.onclick = async () => {
+    await viewAdminEvents(); scrollTo(0,0);
+    const s = ev.data.find(x => x.id === b.dataset.copy);
+    $("ekind").value = s.kind; $("etitle").value = s.title; $("eloc").value = s.location || ""; $("ecut").value = s.cutoff_hours;
+    $("ecap").value = s.capacity ?? ""; $("edesc").value = s.description || ""; $("etr").checked = s.transport; $("etonly").checked = s.transport_only;
+    $("eseats").value = s.transport_seats ?? ""; $("eurl").value = s.external_url || ""; $("etinfo").value = s.transport_info || ""; $("epub").checked = s.published;
+    $("etr").oninput(); $("estart").focus(); toast("Scegli la nuova data e salva");
+  });
   $app.querySelectorAll("button[data-del]").forEach(b => b.onclick = async () => {
     if (!confirmTap(b, "Conferma eliminazione")) return;
     const { error } = await sb.from("events").delete().eq("id", b.dataset.del);
@@ -339,16 +413,22 @@ async function viewAdminEvents(editId = null) {
   });
   $app.querySelectorAll("details[data-reg]").forEach(d => d.ontoggle = async () => {
     if (!d.open) return;
-    const box = d.querySelector("div");
-    const { data, error } = await sb.from("registrations").select("created_at, participants(full_name, si_card, members(full_name,email,phone))").eq("event_id", d.dataset.reg).order("created_at");
+    const box = d.querySelector("div"), e = ev.data.find(x => x.id === d.dataset.reg);
+    const { data, error } = await sb.from("registrations").select("created_at, needs_transport, participants(full_name, si_card, members(full_name,email,phone))").eq("event_id", e.id).order("created_at");
     if (error) { box.textContent = errText(error); return; }
     if (!data.length) { box.textContent = "Nessun iscritto."; return; }
-    const lines = data.map((r,i) => `${i+1}. ${r.participants.full_name}` + (r.participants.members.full_name !== r.participants.full_name ? ` (socio: ${r.participants.members.full_name})` : ""));
-    box.innerHTML = `<ol style="padding-left:20px">${data.map(r => `<li>${esc(r.participants.full_name)}${r.participants.si_card ? ` <span class="muted">· chip ${esc(r.participants.si_card)}</span>` : ""} <span class="muted">· ${esc(r.participants.members.email)}</span></li>`).join("")}</ol>
-      <div class="btns" style="margin-top:8px"><button class="btn sm ghost" data-copy>Copia elenco</button><button class="btn sm ghost" data-csv>Scarica CSV</button></div>`;
-    box.querySelector("[data-copy]").onclick = async () => { try { await navigator.clipboard.writeText(lines.join("\n")); toast("Elenco copiato"); } catch { toast("Copia non riuscita"); } };
-    box.querySelector("[data-csv]").onclick = () => downloadCsv("iscritti.csv", [["Nome","Chip SI","Socio","Email","Telefono","Iscritto il"],
-      ...data.map(r => [r.participants.full_name, r.participants.si_card, r.participants.members.full_name, r.participants.members.email, r.participants.members.phone, fmt(r.created_at,{dateStyle:"short",timeStyle:"short"})])]);
+    const nT = data.filter(r => r.needs_transport).length;
+    const line = (r, i) => `${i + 1}. ${r.participants.full_name}${r.needs_transport && !e.transport_only ? " 🚐" : ""}` + (r.participants.members.full_name !== r.participants.full_name ? ` (socio: ${r.participants.members.full_name})` : "");
+    box.innerHTML = `${e.transport && !e.transport_only ? `<p style="margin-bottom:6px"><b>${data.length}</b> iscritti, di cui <b>${nT}</b> con trasporto 🚐</p>` : ""}
+      <ol style="padding-left:20px">${data.map(r => `<li>${esc(r.participants.full_name)}${r.needs_transport && !e.transport_only ? " 🚐" : ""}${r.participants.si_card ? ` <span class="muted">· chip ${esc(r.participants.si_card)}</span>` : ""} <span class="muted">· ${esc(r.participants.members.phone || r.participants.members.email)}</span></li>`).join("")}</ol>
+      <div class="btns" style="margin-top:8px"><button class="btn sm ghost" data-cp>Copia elenco</button>
+        ${e.transport && !e.transport_only ? `<button class="btn sm ghost" data-cpt>Copia elenco trasporto</button>` : ""}
+        <button class="btn sm ghost" data-csv>Scarica CSV</button></div>`;
+    const copy = async t => { try { await navigator.clipboard.writeText(t); toast("Elenco copiato"); } catch { toast("Copia non riuscita"); } };
+    box.querySelector("[data-cp]").onclick = () => copy(data.map(line).join("\n"));
+    if (box.querySelector("[data-cpt]")) box.querySelector("[data-cpt]").onclick = () => copy(data.filter(r => r.needs_transport).map((r, i) => `${i + 1}. ${r.participants.full_name}`).join("\n"));
+    box.querySelector("[data-csv]").onclick = () => downloadCsv(`iscritti-${e.starts_at.slice(0, 10)}.csv`, [["Nome","Trasporto","Chip SI","Socio","Email","Telefono","Iscritto il"],
+      ...data.map(r => [r.participants.full_name, r.needs_transport ? "sì" : "no", r.participants.si_card, r.participants.members.full_name, r.participants.members.email, r.participants.members.phone, fmt(r.created_at,{dateStyle:"short",timeStyle:"short"})])]);
   });
 }
 

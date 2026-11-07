@@ -257,3 +257,65 @@ create policy fees_read on public.fees for select to authenticated
   using (member_id = public.current_member_id() or public.is_admin());
 create policy fees_admin on public.fees for all to authenticated
   using (public.is_admin()) with check (public.is_admin());
+
+-- ═══ Tipi di evento e trasporto ═══
+alter table public.events
+  add column kind text not null default 'allenamento' check (kind in ('allenamento','gara','evento')),
+  add column transport boolean not null default false,
+  add column transport_only boolean not null default false,
+  add column transport_seats int check (transport_seats > 0),
+  add column transport_info text,
+  add column external_url text,
+  add constraint transport_only_needs_transport check (not transport_only or transport);
+create index on public.events(kind);
+alter table public.registrations add column needs_transport boolean not null default false;
+
+-- Un unico controllo per iscrizioni e trasporto (sostituisce check_capacity)
+drop trigger trg_capacity on public.registrations;
+drop function public.check_capacity();
+create or replace function public.check_registration() returns trigger
+language plpgsql security definer set search_path = '' as $$
+declare e record; taken int;
+begin
+  select capacity, transport, transport_only, transport_seats into e
+    from public.events where id = new.event_id for update;
+  if tg_op = 'UPDATE' and (new.event_id <> old.event_id or new.participant_id <> old.participant_id) then
+    raise exception 'Modifica non consentita' using errcode = 'P0001';
+  end if;
+  if e.transport_only then new.needs_transport := true; end if;
+  if new.needs_transport and not e.transport then
+    raise exception 'Per questo evento non è previsto il trasporto' using errcode = 'P0001';
+  end if;
+  if tg_op = 'INSERT' and e.capacity is not null and not e.transport_only then
+    select count(*) into taken from public.registrations where event_id = new.event_id;
+    if taken >= e.capacity then raise exception 'Evento al completo' using errcode = 'P0001'; end if;
+  end if;
+  if new.needs_transport and e.transport_seats is not null
+     and (tg_op = 'INSERT' or not old.needs_transport) then
+    select count(*) into taken from public.registrations where event_id = new.event_id and needs_transport;
+    if taken >= e.transport_seats then raise exception 'Trasporto al completo' using errcode = 'P0001'; end if;
+  end if;
+  return new;
+end $$;
+revoke execute on function public.check_registration() from public, anon, authenticated;
+create trigger trg_registration before insert or update on public.registrations
+  for each row execute function public.check_registration();
+
+-- Il socio può cambiare la richiesta di trasporto finché le iscrizioni sono aperte
+create policy reg_update on public.registrations for update to authenticated
+  using (public.is_admin() or (public.registration_open(event_id) and participant_id in
+    (select id from public.participants where member_id = public.current_member_id())))
+  with check (public.is_admin() or (public.registration_open(event_id) and participant_id in
+    (select id from public.participants where member_id = public.current_member_id())));
+
+-- Conteggi con il numero di trasporti
+drop function public.event_counts();
+create function public.event_counts()
+returns table(event_id uuid, n bigint, t bigint)
+language sql stable security definer set search_path = '' as $$
+  select r.event_id, count(*), count(*) filter (where r.needs_transport) from public.registrations r
+  where public.current_member_id() is not null
+  group by r.event_id
+$$;
+revoke execute on function public.event_counts() from public, anon;
+grant execute on function public.event_counts() to authenticated;
