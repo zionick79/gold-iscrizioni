@@ -6,6 +6,8 @@
 <title>GOLD · Gruppo Orientisti Lugano e Dintorni</title>
 <meta name="description" content="News, risultati e iscrizioni agli allenamenti del GOLD, Gruppo Orientisti Lugano e Dintorni.">
 <meta name="theme-color" content="#0f3a75">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/logo-240.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -42,7 +44,8 @@ h1,h2,h3,.cond{font-family:"Barlow Condensed",sans-serif;letter-spacing:.01em}
 header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--forest) 94%,transparent);backdrop-filter:blur(8px);color:#fff}
 .hbar{display:flex;align-items:center;gap:16px;height:64px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo .mark{width:38px;height:38px;flex:none}
+.logo .mark{width:62px;height:auto;flex:none;background:#fff;border-radius:10px;padding:3px 5px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.logo small{font-size:12px!important;max-width:none!important}
 .logo b{font:800 30px/1 "Barlow Condensed";color:var(--gold);letter-spacing:.02em}
 .logo small{display:block;font-size:11px;color:#d4e1f4;line-height:1.2;max-width:150px}
 nav.main{margin-left:auto;display:flex;gap:4px}
@@ -192,8 +195,8 @@ footer a:hover{color:var(--gold)}
   <div class="wrap">
     <div class="hbar">
       <a class="logo" href="/">
-        <svg class="mark"><use href="#flag"/></svg>
-        <span><b>GOLD</b><small>Gruppo Orientisti Lugano e Dintorni</small></span>
+        <img class="mark" src="/logo-240.png" alt="GOLD" width="56" height="49">
+        <small>Gruppo Orientisti<br>Lugano e Dintorni</small>
       </a>
       <nav class="main">
         <a class="on" href="#news">News</a><a href="/iscrizioni/">Iscrizioni</a><a href="https://www.gold-savosa.ch/">Sito storico</a><a href="#footer">Contatti</a>
@@ -325,7 +328,7 @@ footer a:hover{color:var(--gold)}
   <div class="wrap">
     <div class="grid">
       <div>
-        <a class="logo" href="/" style="display:flex;padding:0"><svg class="mark"><use href="#flag"/></svg><span><b>GOLD</b><small>Gruppo Orientisti Lugano e Dintorni</small></span></a>
+        <a class="logo" href="/" style="display:flex;padding:0"><img class="mark" src="/logo-240.png" alt="GOLD" width="56" height="49"><small>Gruppo Orientisti<br>Lugano e Dintorni</small></a>
         <p style="margin-top:12px;max-width:300px">Corsa d'orientamento per tutte le età, dai giovanissimi ai veterani, nel Luganese.</p>
       </div>
       <div><h5>Club</h5><a href="https://www.gold-savosa.ch/">Società</a><a href="/iscrizioni/">Iscrizioni allenamenti</a><a href="https://www.gold-savosa.ch/">Corso principianti</a><a href="https://www.gold-savosa.ch/">Forum</a></div>
