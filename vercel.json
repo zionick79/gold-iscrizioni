@@ -1,0 +1,8 @@
+{
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/co/news/index.php", "destination": "/", "permanent": true },
+    { "source": "/co/news", "destination": "/", "permanent": true },
+    { "source": "/co/news/", "destination": "/", "permanent": true }
+  ]
+}
