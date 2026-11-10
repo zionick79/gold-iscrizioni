@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GOLD · Area soci</title>
-<meta name="theme-color" content="#0f3a75">
+<meta name="theme-color" content="#0000d4">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/logo-240.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,14 +12,14 @@
 <style>
 /* Layout: colonna unica centrata, pensata per il telefono; barra blu GOLD in alto */
 :root{
-  --bg:#f4f6fa; --surface:#fff; --ink:#111c2e; --muted:#5a6679; --line:#dde3ec;
-  --blue:#0f3a75; --blue-2:#1a56a8; --gold:#ffc20e; --gold-soft:#fff3c4;
+  --bg:#f6f6f9; --surface:#fff; --ink:#14141f; --muted:#5c5c6e; --line:#e2e2ea;
+  --blue:#0000d4; --blue-2:#0000d4; --gold:#ffe522; --gold-soft:#fff8c4; --red:#fe2222;
   --ok:#1d7a46; --ok-soft:#dcf3e5; --warn:#a35a00; --warn-soft:#ffecd1; --err:#b42318; --err-soft:#fde4e1;
   --display:"Barlow Condensed",system-ui,sans-serif; --body:Inter,system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root{
-  --bg:#0c1220; --surface:#141d2e; --ink:#edf1f7; --muted:#9aa6b8; --line:#243049;
-  --blue:#0b2550; --blue-2:#5b95e6; --gold-soft:#2e2810;
+  --bg:#0b0b17; --surface:#15152a; --ink:#f0f0f6; --muted:#a3a3b8; --line:#2a2a45;
+  --blue:#0000a8; --blue-2:#8c8cff; --gold-soft:#2f2b0c;
   --ok:#6fd49a; --ok-soft:#12301f; --warn:#f2b866; --warn-soft:#33240c; --err:#ff8a7e; --err-soft:#3a1714; color-scheme:dark}}
 *{box-sizing:border-box;margin:0}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);-webkit-font-smoothing:antialiased;min-height:100vh}
@@ -31,12 +31,12 @@ header{background:var(--blue);color:#fff;padding-top:env(safe-area-inset-top);po
 .logo{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
 .logo img{width:54px;height:auto;background:#fff;border-radius:9px;padding:3px 4px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
 .logo b{font:800 26px/1 var(--display);color:var(--gold)}
-.logo small{font-size:12px;color:#d4e1f4}
-.who{margin-left:auto;font-size:13px;color:#d4e1f4;text-align:right;line-height:1.25}
+.logo small{font-size:12px;color:#dedeff}
+.who{margin-left:auto;font-size:13px;color:#dedeff;text-align:right;line-height:1.25}
 .who button{background:none;border:0;color:var(--gold);font:600 13px var(--body);cursor:pointer;padding:0}
 nav.tabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}
-nav.tabs button{flex:none;background:rgba(255,255,255,.08);color:#dbe6f6;border:0;border-radius:999px;padding:7px 14px;font:500 14px var(--body);cursor:pointer}
-nav.tabs button.on{background:var(--gold);color:#0f3a75}
+nav.tabs button{flex:none;background:rgba(255,255,255,.08);color:#e6e6ff;border:0;border-radius:999px;padding:7px 14px;font:500 14px var(--body);cursor:pointer}
+nav.tabs button.on{background:var(--gold);color:#0000d4}
 main{padding-block:20px 60px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
 .stack{display:grid;gap:14px}
@@ -52,7 +52,7 @@ input[type=checkbox]{width:auto}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 @media (max-width:560px){.row,.row3{grid-template-columns:1fr}}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:10px;padding:10px 16px;font:600 14px var(--body);cursor:pointer;background:var(--blue);color:#fff;text-decoration:none;white-space:nowrap}
-.btn.gold{background:var(--gold);color:#0f3a75}
+.btn.gold{background:var(--gold);color:#0000d4}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .btn.danger{background:transparent;color:var(--err);border:1px solid var(--line)}
 .btn.sm{padding:6px 11px;font-size:13px}
@@ -110,9 +110,9 @@ details summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--blue-2
 .chips button.on{background:var(--blue);border-color:var(--blue);color:#fff}
 .chips button.on span{color:var(--gold)}
 .pill.kind-allenamento{background:#d7ecff;color:#0f4a86}
-.pill.kind-gara{background:#ffe7c2;color:#8a4a00}
+.pill.kind-gara{background:#ffe0e0;color:#b3000c}
 .pill.kind-evento{background:#ece2ff;color:#5530a0}
-.card.ev.kind-gara{border-left:4px solid #f29a1b}
+.card.ev.kind-gara{border-left:4px solid var(--red)}
 .card.ev.kind-allenamento{border-left:4px solid var(--blue-2)}
 .card.ev.kind-evento{border-left:4px solid #8a63d2}
 fieldset{border:1px solid var(--line);margin:0;min-width:0}
@@ -121,7 +121,7 @@ fieldset{border:1px solid var(--line);margin:0;min-width:0}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute"><symbol id="flag" viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="36" rx="4" fill="#fff"/><path d="M38 2v32a4 4 0 0 1-4 4H2Z" fill="#f26a1b"/></symbol></svg>
+<svg width="0" height="0" style="position:absolute"><symbol id="flag" viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="36" rx="4" fill="#fff"/><path d="M38 2v32a4 4 0 0 1-4 4H2Z" fill="#fe2222"/></symbol></svg>
 
 <header>
   <div class="wrap">

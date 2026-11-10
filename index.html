@@ -5,27 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>GOLD · Gruppo Orientisti Lugano e Dintorni</title>
 <meta name="description" content="News, risultati e iscrizioni agli allenamenti del GOLD, Gruppo Orientisti Lugano e Dintorni.">
-<meta name="theme-color" content="#0f3a75">
+<meta name="theme-color" content="#0000d4">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/logo-240.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f4f6fa; --surface:#ffffff; --ink:#111c2e; --muted:#5a6679; --line:#dde3ec;
-  --forest:#0f3a75; --forest-2:#1a56a8; --gold:#ffc20e; --gold-soft:#fff3c4;
-  --flag:#f26a1b; --blue:#1f5fa8; --red:#c8312b;
+  --bg:#f6f6f9; --surface:#ffffff; --ink:#14141f; --muted:#5c5c6e; --line:#e2e2ea;
+  --forest:#0000d4; --forest-2:#0000d4; --gold:#ffe522; --gold-soft:#fff8c4;
+  --flag:#fe2222; --blue:#0000d4; --red:#fe2222;
   --shadow:0 1px 2px rgba(20,32,27,.06),0 8px 24px rgba(20,32,27,.07);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0c1220; --surface:#141d2e; --ink:#edf1f7; --muted:#9aa6b8; --line:#243049;
-    --forest:#0b2550; --forest-2:#1c4f99; --gold-soft:#2e2810; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);color-scheme:dark;
+    --bg:#0b0b17; --surface:#15152a; --ink:#f0f0f6; --muted:#a3a3b8; --line:#2a2a45;
+    --forest:#0000a8; --forest-2:#8c8cff; --gold-soft:#2f2b0c; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0c1220; --surface:#141d2e; --ink:#edf1f7; --muted:#9aa6b8; --line:#243049;
-  --forest:#0b2550; --forest-2:#1c4f99; --gold-soft:#2e2810; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);color-scheme:dark;
+  --bg:#0b0b17; --surface:#15152a; --ink:#f0f0f6; --muted:#a3a3b8; --line:#2a2a45;
+  --forest:#0000a8; --forest-2:#8c8cff; --gold-soft:#2f2b0c; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);color-scheme:dark;
 }
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth}
@@ -47,15 +47,15 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:co
 .logo .mark{width:62px;height:auto;flex:none;background:#fff;border-radius:10px;padding:3px 5px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
 .logo small{font-size:12px!important;max-width:none!important}
 .logo b{font:800 30px/1 "Barlow Condensed";color:var(--gold);letter-spacing:.02em}
-.logo small{display:block;font-size:11px;color:#d4e1f4;line-height:1.2;max-width:150px}
+.logo small{display:block;font-size:11px;color:#dedeff;line-height:1.2;max-width:150px}
 nav.main{margin-left:auto;display:flex;gap:4px}
-nav.main a{text-decoration:none;font-weight:500;font-size:14px;padding:8px 12px;border-radius:8px;color:#dbe6f6}
+nav.main a{text-decoration:none;font-weight:500;font-size:14px;padding:8px 12px;border-radius:8px;color:#e6e6ff}
 nav.main a:hover{background:rgba(255,255,255,.08);color:#fff}
 nav.main a.on{background:var(--gold);color:var(--forest)}
 .login{border:1px solid rgba(255,255,255,.3);padding:7px 14px;border-radius:999px;text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap}
 .burger{display:none;margin-left:auto;background:none;border:0;color:#fff;padding:8px;cursor:pointer}
 .mnav{display:none;border-top:1px solid rgba(255,255,255,.1);padding:8px 0 14px}
-.mnav a{display:block;padding:10px 4px;text-decoration:none;color:#e3ecf8;font-weight:500;border-bottom:1px solid rgba(255,255,255,.06)}
+.mnav a{display:block;padding:10px 4px;text-decoration:none;color:#ececff;font-weight:500;border-bottom:1px solid rgba(255,255,255,.06)}
 header.open .mnav{display:block}
 @media (max-width:900px){nav.main,.hbar .login{display:none}.burger{display:block}}
 
@@ -66,7 +66,7 @@ header.open .mnav{display:block}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
 .hero h1{font-size:clamp(38px,6vw,64px);line-height:.98;margin:12px 0 14px;font-weight:800}
 .hero h1 em{font-style:normal;color:var(--gold)}
-.hero p.lead{color:#d4e1f4;max-width:520px;font-size:16px}
+.hero p.lead{color:#dedeff;max-width:520px;font-size:16px}
 .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:12px;font-weight:600;text-decoration:none;font-size:14px;border:0;cursor:pointer}
 .btn.pri{background:var(--gold);color:var(--forest)}
@@ -158,7 +158,7 @@ aside{display:grid;gap:16px;position:sticky;top:84px}
 .shop b{white-space:nowrap}
 
 /* ── Footer ── */
-footer{margin-top:64px;background:var(--forest);color:#d4e1f4;padding:40px 0 28px;font-size:14px}
+footer{margin-top:64px;background:var(--forest);color:#dedeff;padding:40px 0 28px;font-size:14px}
 footer .grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:24px}
 footer h5{font:700 16px "Barlow Condensed";color:#fff;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
 footer a{display:block;text-decoration:none;padding:3px 0}
@@ -174,9 +174,9 @@ footer a:hover{color:var(--gold)}
 <!-- simboli riutilizzati -->
 <svg width="0" height="0" style="position:absolute">
   <defs>
-    <symbol id="flag" viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="36" rx="4" fill="#fff"/><path d="M38 2v32a4 4 0 0 1-4 4H2Z" fill="#f26a1b"/></symbol>
+    <symbol id="flag" viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="36" rx="4" fill="#fff"/><path d="M38 2v32a4 4 0 0 1-4 4H2Z" fill="#fe2222"/></symbol>
     <pattern id="contour" width="400" height="300" patternUnits="userSpaceOnUse">
-      <g fill="none" stroke="#ffd24d" stroke-width="1.3">
+      <g fill="none" stroke="#ffe522" stroke-width="1.3">
         <path d="M-20 60 C60 20 120 100 200 60 S340 20 420 70"/>
         <path d="M-20 90 C60 50 120 130 200 90 S340 50 420 100"/>
         <path d="M-20 120 C70 80 130 160 210 120 S350 80 420 130"/>
@@ -295,7 +295,7 @@ footer a:hover{color:var(--gold)}
       <aside>
         <div class="box" style="background:var(--forest);color:#fff;border-color:transparent">
           <h4 style="color:var(--gold)">Iscrizioni online</h4>
-          <p style="font-size:14px;color:#d4e1f4">Allenamenti, gare e trasferte: i soci si iscrivono e si disiscrivono da soli, anche per i figli. Si entra con l'email, senza password.</p>
+          <p style="font-size:14px;color:#dedeff">Allenamenti, gare e trasferte: i soci si iscrivono e si disiscrivono da soli, anche per i figli. Si entra con l'email, senza password.</p>
           <a class="btn pri" style="margin-top:14px;width:100%;justify-content:center" href="/iscrizioni/">Vai alle iscrizioni</a>
         </div>
         <div class="box">
